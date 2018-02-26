@@ -12,13 +12,13 @@ def get_response(request):
     if url == '':
         i = request.find('User-Agent: ') + 12
         code = code + '200 OK\n'
-        u = 'Hello mister!<br>You are: ' + request[i: request.find('\n', i + 1)]
+        u = 'Hello mister!<br>You are: ' + request[i: request.find('\n', i + 1)] + '<br><br><a href="/media/">Media</a><br><a href="/test/">Test</a><br>'
     elif url == 'test/' or url == 'test':
         code = code + '\n'
         u = request.replace('\n', '<br>')
     elif url == 'media/' or url == 'media':
         u = ''		
-        for x in os.listdir('./files'): u = u + x + '<br>'
+        for x in os.listdir('./files'): u = u + '<a href="/media/' + x + '">' + x + '</a><br>'
         code = code + '200 OK\n'
     elif url.find('media/') == 0:
         try:
