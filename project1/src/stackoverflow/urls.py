@@ -17,14 +17,22 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls import include, url
+from core.views import page
+from categories.views import category_id, category_list
+from questions.views import question_id, question_list
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', page),
+    url(r'^category/(\d+)/$', category_id),
+    url(r'^category/$', category_list),
+    url(r'^question/(\d+)/$', question_id),
+    url(r'^question/$', question_list),
 
 ]
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
-        url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^debug/', include(debug_toolbar.urls)),
     ] + urlpatterns

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, HttpResponse
 
-# Create your views here.
-def MainPage()
 
-    return HttpResponse('This is ')
+def page(request):
+
+    return HttpResponse('This is Main Page')
