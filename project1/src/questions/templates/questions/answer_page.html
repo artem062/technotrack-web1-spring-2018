@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Answer for question #{{ question.name }}{% endblock %}
+
+{% block context %}
+    <a href="{% url 'question_detail' pk=question.id %}"><--to question</a><br>
+    Name: {{ answer.name }}<br>
+    ID: {{ answer.id }}<br>
+    Author: {{ answer.author }}<br>
+{% endblock %}
+

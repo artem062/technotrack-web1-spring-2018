@@ -1,0 +1,10 @@
+{% extends 'questions/base.html' %}
+
+{% block title %}Questions list{% endblock %}
+
+{% block context %}
+     <a href="{% url "categories_list" %}">All categoties</a><br>
+    {% for question in questions %}
+    {{ forloop.counter }}. <a href="{% url "question_detail" pk=question.id %}">{{ question.name }}</a><br>
+    {% endfor %}
+{% endblock %}

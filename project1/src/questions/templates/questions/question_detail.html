@@ -1,0 +1,13 @@
+{% extends "questions/base.html" %}
+
+{% block title %}Question #{{ question.id }}{% endblock %}
+
+{% block context %}
+    <a href="{% url "questions_list" %}">All questions</a><br>
+    ID: {{ question.id }}<br>
+    Name: {{ question.name }}<br>
+    Author: {{ question.author }}<br>
+    {% for answer in answers %}
+    {{ forloop.counter }}. <a href="{% url "answer_detail" pk=answer.id %}">{{ answer.name }}</a><br>
+    {% endfor %}
+{% endblock %}

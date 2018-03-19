@@ -2,14 +2,23 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, HttpResponse
+from .models import Category
 
 
-def category_id (request, cat_id):
+def category_list(request):
 
-    return HttpResponse('This is category №{}'.format(cat_id))
+    context = {
+        'categories': Category.objects.all()
+    }
+    return render(request, 'categories/categories_list.html', context)
 
 
-def category_list (request):
+def category_detail(request, pk=None):
 
-    return HttpResponse('Categories:')
+    category = Category.objects.get(id=pk)
 
+    context = {
+        'category': category,
+        'questions': category.questions.all().filter(is_archive=False)
+    }
+    return render(request, 'categories/category_detail.html', context)

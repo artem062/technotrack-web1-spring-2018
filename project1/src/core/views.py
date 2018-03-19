@@ -6,4 +6,19 @@ from django.shortcuts import render, HttpResponse
 
 def page(request):
 
-    return HttpResponse('This is Main Page')
+    return render(request, 'core/main_page.html')
+
+
+def login(request):
+
+    return render(request, 'core/login.html')
+
+
+def logout(request):
+
+    return render(request, 'core/logout.html')
+
+
+def register(request):
+
+    return render(request, 'core/register.html')
