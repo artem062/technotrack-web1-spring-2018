@@ -3,12 +3,12 @@
 {% block title %}Question #{{ question.id }}{% endblock %}
 
 {% block context %}
-    <a href="{% url "questions_list" %}">All questions</a><br>
+    <a href="{% url "questions:questions_list" %}">All questions</a><br>
     ID: {{ question.id }}<br>
     Name: {{ question.name }}<br>
     Author: {{ question.author }}<br>
     {% for answer in answers %}
-    {{ forloop.counter }}. <a href="{% url "answer_detail" pk=answer.id %}">{{ answer.name }}</a><br>
+    {{ forloop.counter }}. <a href="{% url "questions:answer_detail" pk=answer.id %}">{{ answer.name }}</a><br>
     {% endfor %}
-    <a href="{% url 'answer_add' pk=question.id%}">Add answer</a>
+    <a href="{% url 'questions:answer_add' pk=question.id%}">Add answer</a>
 {% endblock %}

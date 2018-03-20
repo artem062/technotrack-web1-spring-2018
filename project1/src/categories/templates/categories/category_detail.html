@@ -3,11 +3,11 @@
 {% block title %}Category {{ category.name }}{% endblock %}
 
 {% block context %}
-    <a href="{% url "categories_list" %}">All categoties</a><br>
+    <a href="{% url "categories:categories_list" %}">All categoties</a><br>
     ID: {{ category.id }}<br>
     Name: {{ category.name }}<br>
     {% for question in questions %}
-    {{ forloop.counter }}. <a href="{% url "question_detail" pk=question.id %}">{{ question.name }}</a><br>
+    {{ forloop.counter }}. <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a><br>
     {% endfor %}
-    <a href="{% url 'questions_add' pk=category.id%}">Add question</a>
+    <a href="{% url 'questions:questions_add' pk=category.id%}">Add question</a>
 {% endblock %}

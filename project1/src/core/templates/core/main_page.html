@@ -3,7 +3,7 @@
 {% block title %}Welcome to my site!!!{% endblock %}
 
 {% block context %}
-    <a href="{% url 'categories_list' %}">Categories</a><br>
-    <a href="{% url 'login' %}">LOGIN</a><br>
-    <a href="{% url 'register' %}">REGISTER</a><br>
+    <a href="{% url 'categories:categories_list' %}">Categories</a><br>
+    <a href="{% url 'core:login' %}">LOGIN</a><br>
+    <a href="{% url 'core:register' %}">REGISTER</a><br>
 {% endblock %}

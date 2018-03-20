@@ -4,6 +4,6 @@
 
 {% block context %}
     {% for category in categories %}
-    {{ forloop.counter }}. <a href="{% url "category_detail" pk=category.id %}">{{ category.name }}</a><br>
+    {{ forloop.counter }}. <a href="{% url "categories:category_detail" pk=category.id %}">{{ category.name }}</a><br>
     {% endfor %}
 {% endblock %}

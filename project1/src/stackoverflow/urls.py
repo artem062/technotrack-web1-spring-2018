@@ -5,9 +5,10 @@ from questions.views import answer_detail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('core.urls')),
-    url(r'^category/', include('categories.urls')),
-    url(r'^question/', include('questions.urls')),
+    url(r'^', include('core.urls', namespace='core')),
+    url(r'^category/', include('categories.urls', namespace='categories')),
+    url(r'^question/', include('questions.urls', namespace='questions')),
+
     url(r'^answer/(?P<pk>\d+)/$', answer_detail, name='answer_detail'),
 ]
 
