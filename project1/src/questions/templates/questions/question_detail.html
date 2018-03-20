@@ -10,4 +10,5 @@
     {% for answer in answers %}
     {{ forloop.counter }}. <a href="{% url "answer_detail" pk=answer.id %}">{{ answer.name }}</a><br>
     {% endfor %}
+    <a href="{% url 'answer_add' pk=question.id%}">Add answer</a>
 {% endblock %}

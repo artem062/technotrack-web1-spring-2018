@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, HttpResponse
 from .models import Question, Answer
+from categories.models import Category
 
 
 def questions_list(request):
@@ -31,3 +32,20 @@ def answer_detail(request, pk=None):
         'question': answer.question
     }
     return render(request, 'questions/answer_page.html', context)
+
+
+def question_add(request, pk=None):
+
+    context = {
+        'category': Category.objects.get(id=pk),
+    }
+
+    return render(request, 'questions/question_add.html', context)
+
+
+def answer_add(request, pk=None):
+
+    context = {
+        'question': Question.objects.get(id=pk),
+    }
+    return render(request, 'questions/answer_add.html', context)
