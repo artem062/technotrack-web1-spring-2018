@@ -11,6 +11,7 @@ class Question(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='questions', verbose_name=u'Автор')
     categories = models.ManyToManyField(Category, blank=True, related_name='questions', verbose_name=u'Категории')
     name = models.CharField(max_length=255, verbose_name=u'Вопрос')
+    text = models.CharField(max_length=1023, verbose_name=u'Текст вопроса')
     is_archive = models.BooleanField(default=False, verbose_name=u'в архиве')
     created = models.DateTimeField(auto_now_add=True, verbose_name=u'Создано')
     updated = models.DateTimeField(auto_now=True, verbose_name=u'Обновлено')

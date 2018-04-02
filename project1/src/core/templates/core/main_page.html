@@ -3,7 +3,12 @@
 {% block title %}Welcome to my site!!!{% endblock %}
 
 {% block context %}
-    <a href="{% url 'categories:categories_list' %}">Categories</a><br>
-    <a href="{% url 'core:login' %}">LOGIN</a><br>
-    <a href="{% url 'core:register' %}">REGISTER</a><br>
+    <form action="" method="post">
+        {% csrf_token %}
+        <label>Логин:<input type="text", name="login"></label><br>
+        <label>Пароль:<input type="password", name="password"></label><br>
+        <input type="submit" value="Войти">
+    </form>
+    <a href="{% url 'core:register' %}">Регистрация</a><br>
+    <a href="{% url 'categories:categories_list' %}">Категории</a><br>
 {% endblock %}

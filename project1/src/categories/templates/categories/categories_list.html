@@ -3,6 +3,15 @@
 {% block title %}Categories list{% endblock %}
 
 {% block context %}
+    <form action="" method="get">
+        <label>Сортировать по {{ categories_form.sort }}</label>
+        {% if categories_form.sort.errors %}
+            {{ categories_form.sort.errors }}
+        {% endif %}<br>
+        <label>Поиск {{ categories_form.search }}</label><br>
+        <input type="submit" value="Go">
+    </form>
+
     {% for category in categories %}
     {{ forloop.counter }}. <a href="{% url "categories:category_detail" pk=category.id %}">{{ category.name }}</a><br>
     {% endfor %}
