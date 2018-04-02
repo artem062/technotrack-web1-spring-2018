@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404, reverse
 from .models import Question, Answer
-from categories.models import Category
 from django import forms
+from django.views.generic import UpdateView, CreateView
 
 
 def questions_list(request):
@@ -35,55 +35,35 @@ def answer_detail(request, pk=None):
     return render(request, 'questions/answer_page.html', context)
 
 
-class QuestionAddForm (forms.Form):
+class QuestionAdd(CreateView):
 
-    name = forms.CharField(required=True)
-    text = forms.CharField(required=False)
+    model = Question
+    fields = 'name', 'text'
+    context_object_name = 'question'
+    template_name = 'questions/question_add.html'
 
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(QuestionAdd, self).form_valid(form)
 
-def question_add(request, pk=None):
-
-    if request.method == 'GET':
-        form = QuestionAddForm()
-        context = {
-            'category': Category.objects.get(id=pk),
-            'question_form': form
-        }
-        return render(request, 'questions/question_add.html', context)
-    elif request.method == 'POST':
-        form = QuestionAddForm(request.POST)
-        if form.is_valid():
-            data = form.cleaned_data
-            new_question = Question(name=data['name'], text=data['text'])
-            new_question.author = request.user
-            new_question.save()
-            new_question.categories = Category.objects.get(id=pk),
-            new_question.save()
-            return redirect('questions:question_detail', pk=new_question.id)
-        else:
-            context = {
-                'category': Category.objects.get(id=pk),
-                'question_form': form
-            }
-            return render(request, 'questions/question_add.html', context)
+    def get_success_url(self):
+        return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
-def question_edit(request, pk=None):
+class QuestionEdit(UpdateView):
 
-    question = get_object_or_404(Question, id=pk)
+    model = Question
+    fields = 'name', 'text'
+    context_object_name = 'question'
+    template_name = 'questions/question_edit.html'
 
-    if request.method == 'GET':
-        form = QuestionAddForm(initial={'name': question.name, 'text': question.text})
-        return render(request, 'questions/question_edit.html', {'question': question, 'question_form': form})
-    elif request.method == 'POST':
-        form = QuestionAddForm(request.POST, initial={'name': question.name, 'text': question.text})
-        if form.is_valid():
-            question.name = form.cleaned_data['name']
-            question.text = form.cleaned_data['text']
-            question.save()
-            return redirect('questions:question_detail', pk=question.id)
-        else:
-            return render(request, 'questions/question_detail.html', {'question': question, 'question_form': form})
+    def get_queryset(self):
+        queryset = super(QuestionEdit, self).get_queryset()
+        queryset = queryset.filter(author=self.request.user)
+        return queryset
+
+    def get_success_url(self):
+        return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
 def answer_add(request, pk=None):

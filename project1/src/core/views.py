@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, HttpResponse
 from django import forms
+from django.contrib.auth.views import LogoutView, LoginView
 
 
 def page(request):
@@ -10,14 +11,13 @@ def page(request):
     return render(request, 'core/main_page.html')
 
 
-def login(request):
+class Login (LoginView):
 
-    return render(request, 'core/login.html')
+    template_name = 'core/login.html'
 
 
-def logout(request):
-
-    return render(request, 'core/logout.html')
+class Logout(LogoutView):
+    template_name = 'core/logout.html'
 
 
 class RegisterForm (forms.Form):

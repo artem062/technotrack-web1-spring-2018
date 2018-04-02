@@ -130,3 +130,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 INTERNAL_IPS = ['127.0.0.1', ]
+
+LOGIN_URL = 'core:login'
+
+LOGOUT_URL = 'core:logout'
+
+REGISTER_URL = 'core:register'
+
+PROFILE_URL = 'core:profile'

@@ -9,5 +9,5 @@
     {% for question in questions %}
     {{ forloop.counter }}. <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a><br>
     {% endfor %}
-    <a href="{% url 'questions:questions_add' pk=category.id%}">Add question</a>
+    <a href="{% url 'questions:question_add' pk=category.id%}">Add question</a>
 {% endblock %}

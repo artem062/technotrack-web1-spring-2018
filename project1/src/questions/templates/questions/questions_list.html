@@ -1,10 +1,11 @@
 {% extends 'questions/base.html' %}
 
-{% block title %}Questions list{% endblock %}
+{% block title %}Список вопросов{% endblock %}
 
 {% block context %}
-     <a href="{% url "categories:categories_list" %}">All categoties</a><br>
+     <a href="{% url "categories:categories_list" %}">Список категорий</a><br>
     {% for question in questions %}
-    {{ forloop.counter }}. <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a><br>
+    {{ forloop.counter }}. <a href="{% url "questions:question_detail" pk=question.id %}">
+        {{ question.name }}</a> ({{ question.text }}) by {{ question.author }}<br>
     {% endfor %}
 {% endblock %}

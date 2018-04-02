@@ -1,14 +1,16 @@
 {% extends "questions/base.html" %}
 
-{% block title %}Question #{{ question.id }}{% endblock %}
+{% block title %}Вопрос №{{ question.id }}{% endblock %}
 
 {% block context %}
-    <a href="{% url "questions:questions_list" %}">All questions</a><br>
-    ID: {{ question.id }}<br>
-    Name: {{ question.name }}<br>
-    Text: {{ question.text }}<br>
-    Author: {{ question.author }}<br>
-    <a href="{% url "questions:question_edit" pk=question.id %}">Редактировать</a><br>
+    <a href="{% url "questions:questions_list" %}">Все вопросы</a><br>
+    <b>ID:</b> {{ question.id }}<br>
+    <b>Вопрос:</b> {{ question.name }}<br>
+    <b>Текст вопроса:</b> {{ question.text }}<br>
+    <b>Автор:</b> {{ question.author }}<br>
+    {% if question.author == user %}
+        <a href="{% url "questions:question_edit" pk=question.id %}">Редактировать</a><br>
+    {% endif %}
     {% for answer in answers %}
     {{ forloop.counter }}. <a href="{% url "questions:answer_detail" pk=answer.id %}">{{ answer.name }}</a><br>
     {% endfor %}
