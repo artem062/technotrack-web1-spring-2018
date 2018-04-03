@@ -11,8 +11,24 @@
     {% if question.author == user %}
         <a href="{% url "questions:question_edit" pk=question.id %}">Редактировать</a><br>
     {% endif %}
+    Ответы:<br>
     {% for answer in answers %}
-    {{ forloop.counter }}. <a href="{% url "questions:answer_detail" pk=answer.id %}">{{ answer.name }}</a><br>
+        {{ forloop.counter }}.
+        {% if answer.author == request.user %}
+            <a href="{% url "questions:answer_edit" pk=answer.id %}">{{ answer.name }}</a>
+        {% else %}
+            {{ answer.name }}
+        {% endif %}
+        (с) {{ answer.author }}<br>
     {% endfor %}
-    <a href="{% url 'questions:answer_add' pk=question.id%}">Добавить ответ</a>
+    <form action="" method="post">
+        {% csrf_token %}
+        <label>Ответ: {{ form.name }}</label>
+        <div style="display: none">
+            {{ form.question }}
+            {{ form.author }}
+        </div>
+        {{ form.errors }}
+        <input type="submit" value="Добавить ответ">
+    </form>
 {% endblock %}

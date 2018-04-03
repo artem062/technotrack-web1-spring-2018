@@ -7,12 +7,44 @@ from django import forms
 from django.views.generic import UpdateView, CreateView
 
 
+class QuestionsListForm (forms.Form):
+
+    sort = forms.ChoiceField(choices=(
+        ('name', 'по имени'),
+        ('-name', 'по имени в обратном'),
+        ('id', 'по ID'),
+        ('author', 'по автору')
+    ), required=False)
+    search = forms.CharField(required=False)
+
+
 def questions_list(request):
 
+    questions = Question.objects.all()
+    form = QuestionsListForm(request.GET)
+    if form.is_valid():
+        data = form.cleaned_data
+        if data['sort']:
+            questions = questions.order_by(data['sort'])
+        if data['search']:
+            questions = questions.filter(name__icontains=data['search'])
     context = {
-        'questions': Question.objects.all()
+        'questions': questions,
+        'question_form': form
     }
     return render(request, 'questions/questions_list.html', context)
+
+
+class AnswerAdd (forms.Form):
+
+    name = forms.CharField(required=True)
+
+
+class AnswerForm(forms.ModelForm):
+
+    class Meta:
+        model = Answer
+        fields = 'name', 'author', 'question'
 
 
 def question_detail(request, pk=None):
@@ -20,9 +52,21 @@ def question_detail(request, pk=None):
     question = get_object_or_404(Question, id=pk)
     context = {
         'question': question,
-        'answers': question.answers.all().filter(is_archive=False)
+        'answers': question.answers.all().filter(is_archive=False).order_by('created'),
     }
-    return render(request, 'questions/question_detail.html', context)
+    if request.method == 'GET':
+        form = AnswerForm(initial={'author': request.user, 'question': question})
+        context['form'] = form
+        return render(request, 'questions/question_detail.html', context)
+    elif request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save()
+            print(answer)
+            return redirect('questions:question_detail', pk=question.pk)
+        else:
+            context['form'] = form
+            return render(request, 'questions/question_detail.html', context)
 
 
 def answer_detail(request, pk=None):
@@ -32,13 +76,13 @@ def answer_detail(request, pk=None):
         'answer': answer,
         'question': answer.question
     }
-    return render(request, 'questions/answer_page.html', context)
+    return render(request, 'questions/answer_edit.html', context)
 
 
 class QuestionAdd(CreateView):
 
     model = Question
-    fields = 'name', 'text'
+    fields = 'name', 'text', 'categories'
     context_object_name = 'question'
     template_name = 'questions/question_add.html'
 
@@ -53,7 +97,7 @@ class QuestionAdd(CreateView):
 class QuestionEdit(UpdateView):
 
     model = Question
-    fields = 'name', 'text'
+    fields = 'name', 'text', 'categories'
     context_object_name = 'question'
     template_name = 'questions/question_edit.html'
 
@@ -66,9 +110,17 @@ class QuestionEdit(UpdateView):
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
-def answer_add(request, pk=None):
+class AnswerEdit(UpdateView):
 
-    context = {
-        'question': Question.objects.get(id=pk),
-    }
-    return render(request, 'questions/answer_add.html', context)
+    model = Answer
+    fields = 'name',
+    context_object_name = 'answer'
+    template_name = 'questions/answer_edit.html'
+
+    def get_queryset(self):
+        queryset = super(AnswerEdit, self).get_queryset()
+        queryset = queryset.filter(author=self.request.user)
+        return queryset
+
+    def get_success_url(self):
+        return reverse('questions:question_detail', kwargs={'pk': self.object.question.id})

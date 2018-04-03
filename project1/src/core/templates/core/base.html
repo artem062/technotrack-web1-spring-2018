@@ -1,4 +1,7 @@
-<h6><a href="{% url 'core:main' %}">Главная страница</a></h6>
+<h6><a href="{% url 'core:main' %}">Главная страница</a>
+    <a href="{% url 'categories:categories_list' %}">Список категорий</a>
+    <a href="{% url 'questions:questions_list' %}">Список вопросов</a>
+    <a href="{% url 'questions:question_add' %}">Задать вопрос</a></h6>
 
 <h1>{% block title %}{% endblock %}</h1>
 
@@ -6,4 +9,11 @@
     {% block context %}{% endblock %}
 </div>
 
-<h6>END OF PAGE</h6>
+<h6>
+    {% if request.user.username %}
+        Пользователь: <a href="{% url 'core:profile' %}">{{ request.user }}</a>
+        <a href="{% url 'core:logout' %}">Выйти</a><br>
+    {% else %}
+        <a href="{% url 'core:login' %}">Войти</a><br>
+    {% endif %}
+</h6>

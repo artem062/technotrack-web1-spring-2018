@@ -137,4 +137,4 @@ LOGOUT_URL = 'core:logout'
 
 REGISTER_URL = 'core:register'
 
-PROFILE_URL = 'core:profile'
+LOGIN_REDIRECT_URL = 'core:profile'

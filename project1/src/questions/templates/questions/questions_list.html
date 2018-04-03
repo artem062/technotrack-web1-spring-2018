@@ -4,8 +4,19 @@
 
 {% block context %}
      <a href="{% url "categories:categories_list" %}">Список категорий</a><br>
+
+    <form action="" method="get">
+        <label>Сортировать по {{ question_form.sort }}</label>
+        {% if question_form.sort.errors %}
+            {{ question_form.sort.errors }}
+        {% endif %}<br>
+        <label>Поиск {{ question_form.search }}</label><br>
+        <input type="submit" value="Go">
+    </form>
+
     {% for question in questions %}
     {{ forloop.counter }}. <a href="{% url "questions:question_detail" pk=question.id %}">
         {{ question.name }}</a> ({{ question.text }}) by {{ question.author }}<br>
     {% endfor %}
+    <a href="{% url 'questions:question_add' %}">Задать вопрос</a>
 {% endblock %}

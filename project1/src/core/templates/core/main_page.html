@@ -5,6 +5,11 @@
 {% block context %}
     <a href="{% url 'core:login' %}">Войти</a><br>
     <a href="{% url 'core:logout' %}">Выйти</a><br>
-    <a href="{% url 'core:register' %}">Регистрация</a><br>
-    <a href="{% url 'categories:categories_list' %}">Категории</a><br>
+    {% if request.user.is_anonymous %}
+        <a href="{% url 'core:register' %}">Регистрация</a><br>
+    {% else %}
+        <a href="{% url 'core:profile' %}">Мой профиль</a><br>
+    {% endif %}
+    <a href="{% url 'categories:categories_list' %}">Список категорий</a><br>
+    <a href="{% url 'questions:questions_list' %}">Список вопросов</a><br>
 {% endblock %}
