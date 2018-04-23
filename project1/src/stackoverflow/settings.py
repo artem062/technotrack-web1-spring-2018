@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'categories.apps.CategoriesConfig',
     'questions.apps.QuestionsConfig',
+    'crispy_forms',
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -138,3 +139,5 @@ LOGOUT_URL = 'core:logout'
 REGISTER_URL = 'core:register'
 
 LOGIN_REDIRECT_URL = 'core:profile'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -1,11 +1,13 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Вход пользователя{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block title %}Вход{% endblock %}
 
 {% block context %}
     <form action="" method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ form|crispy }}
         <input type="submit", value="Войти">
     </form>
 {% endblock %}
