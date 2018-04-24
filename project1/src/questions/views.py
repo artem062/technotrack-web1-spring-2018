@@ -14,8 +14,8 @@ class QuestionsListForm (forms.Form):
         ('-name', 'по имени в обратном'),
         ('id', 'по ID'),
         ('author', 'по автору')
-    ), required=False)
-    search = forms.CharField(required=False)
+    ), required=False, label='Сортировать')
+    search = forms.CharField(required=False, label='Поиск')
 
 
 def questions_list(request):
@@ -35,16 +35,11 @@ def questions_list(request):
     return render(request, 'questions/questions_list.html', context)
 
 
-class AnswerAdd (forms.Form):
-
-    name = forms.CharField(required=True)
-
-
 class AnswerForm(forms.ModelForm):
 
     class Meta:
         model = Answer
-        fields = 'name', 'author', 'question'
+        fields = 'name',
 
 
 def question_detail(request, pk=None):
@@ -61,8 +56,9 @@ def question_detail(request, pk=None):
     elif request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
-            answer = form.save()
-            print(answer)
+            data = form.cleaned_data
+            answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
+            answer.save()
             return redirect('questions:question_detail', pk=question.pk)
         else:
             context['form'] = form

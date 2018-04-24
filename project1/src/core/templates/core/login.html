@@ -5,7 +5,7 @@
 {% block title %}Вход{% endblock %}
 
 {% block context %}
-    <form action="" method="post">
+    <form action="" method="post" class="uniForm">
         {% csrf_token %}
         {{ form|crispy }}
         <input type="submit", value="Войти">

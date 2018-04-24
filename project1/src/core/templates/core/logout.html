@@ -3,6 +3,15 @@
 {% block title %}Выход{% endblock %}
 
 {% block context %}
-    <a href="{% url 'core:login' %}">Login again</a>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <a href="{% url 'core:login' %}">Login again</a><br>
+            </div>
+            <div class="col">
+                <img src="../../static/gb.jpg" alt="" class="img-fluid">
+            </div>
+        </div>
+    </div>
 {% endblock %}
 

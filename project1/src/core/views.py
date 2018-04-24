@@ -6,11 +6,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.views import LogoutView, LoginView
 from core.models import User
+from questions.models import Question, Answer
+from categories.models import Category
 
 
 def page(request):
 
-    return render(request, 'core/main_page.html')
+    return render(request, 'core/main_page.html', {'categories': Category.objects.order_by('name')})
 
 
 class ChangeForm(UserChangeForm):
@@ -21,8 +23,13 @@ class ChangeForm(UserChangeForm):
 def profile(request):
 
     user = User.objects.get(id=request.user.id)
+    context = {
+        'questions': Question.objects.filter(author=request.user),
+        'answers': Answer.objects.filter(author=request.user)
+    }
     if request.method == 'GET':
-        return render(request, 'core/profile.html', {'profile_form': ChangeForm(instance=user)})
+        context['profile_form'] = ChangeForm(instance=user)
+        return render(request, 'core/profile.html', context)
     elif request.method == 'POST':
         form = ChangeForm(request.POST, instance=user)
         if form.is_valid():
@@ -32,7 +39,8 @@ def profile(request):
             user.save()
             return redirect('core:profile')
         else:
-            return render(request, 'core/profile.html', {'profile_form': form})
+            context['profile_form'] = form
+            return render(request, 'core/profile.html', context)
 
 
 class Login (LoginView):
@@ -48,6 +56,22 @@ class Logout(LogoutView):
 class RegisterForm(UserCreationForm):
 
     email = forms.EmailField(required=True)
+
+
+def search(request):
+    if request.method == 'GET':
+        return render(request, 'core/register.html', {'register_form': RegisterForm()})
+    elif request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            user = User()
+            user.username = data['login']
+            user.email = data['email']
+            user.save()
+            return redirect('core:profile')
+        else:
+            return render(request, 'core/register.html', {'register_form': form})
 
 
 def register(request):

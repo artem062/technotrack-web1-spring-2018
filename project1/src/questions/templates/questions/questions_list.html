@@ -1,22 +1,39 @@
 {% extends 'questions/base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Список вопросов{% endblock %}
 
 {% block context %}
-     <a href="{% url "categories:categories_list" %}">Список категорий</a><br>
+    <div align="center"><h3>Список вопросов</h3></div>
 
-    <form action="" method="get">
-        <label>Сортировать по {{ question_form.sort }}</label>
-        {% if question_form.sort.errors %}
-            {{ question_form.sort.errors }}
-        {% endif %}<br>
-        <label>Поиск {{ question_form.search }}</label><br>
-        <input type="submit" value="Go">
-    </form>
-
-    {% for question in questions %}
-    {{ forloop.counter }}. <a href="{% url "questions:question_detail" pk=question.id %}">
-        {{ question.name }}</a> ({{ question.text }}) by {{ question.author }}<br>
-    {% endfor %}
-    <a href="{% url 'questions:question_add' %}">Задать вопрос</a>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-1">№</div>
+                    <div class="col">Тема вопроса</div>
+                    <div class="col-6">Текст вопроса</div>
+                    <div class="col">Автор</div>
+                </div>
+                {% for question in questions %}
+                    <div class="row">
+                        <div class="col-1">{{ forloop.counter }}</div>
+                        <div class="col">
+                            <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a>
+                        </div>
+                        <div class="col-6">{{ question.text }}</div>
+                        <div class="col">{{ question.author }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-3 bg-light">
+                <form action="" method="get" class="uniForm">
+                    {{ question_form|crispy }}
+                    <input type="submit" value="Go">
+                </form>
+                <a href="{% url 'questions:question_add' %}">Задать вопрос</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

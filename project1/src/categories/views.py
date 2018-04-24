@@ -12,8 +12,8 @@ class CategoriesListForm (forms.Form):
         ('name', 'по имени'),
         ('-name', 'по имени в обратном'),
         ('id', 'по ID'),
-    ), required=False)
-    search = forms.CharField(required=False)
+    ), required=False, label='Сортировать')
+    search = forms.CharField(required=False, label='Поиск')
 
 
 def category_list(request):

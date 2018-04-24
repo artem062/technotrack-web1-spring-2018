@@ -1,11 +1,15 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Ответ на вопрос #{{ question.name }}{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block title %}Редактировать ответ{% endblock %}
 
 {% block context %}
-    <form action="" method="post">
+    <a href="{% url "questions:question_detail" pk=answer.question_id %}">{{ answer.question.name }}</a><br>
+    {{ answer.question.text }}<br>
+    <form action="" method="post" class="uniForm">
         {% csrf_token %}
-        {{ form }}
+        {{ form|crispy }}
         <input type="submit" value="Сохранить">
     </form>
 {% endblock %}

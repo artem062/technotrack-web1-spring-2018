@@ -1,11 +1,13 @@
 {% extends 'questions/base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Создать вопрос{% endblock %}
 
 {% block context %}
-    <form action="" method="post">
+    <form action="" method="post" class="uniForm">
         {% csrf_token %}
-        {{ form }}
+        {{ form|crispy }}
         <input type="submit" value="Отправить">
     </form>
 {% endblock %}

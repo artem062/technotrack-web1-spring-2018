@@ -1,11 +1,31 @@
 {% extends 'core/base.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Профиль{% endblock %}
 
 {% block context %}
-    <form action="" method="post">
+    <form action="" method="post" class="uniForm">
         {% csrf_token %}
         <label>Логин: {{ profile_form.username }}</label><br>
         <label>Email: {{ profile_form.email }}</label>
     </form>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h4>Мои вопросы</h4>
+                {% for question in questions %}
+                {{ forloop.counter }}.
+                    <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a><br>
+                {% endfor %}
+            </div>
+            <div class="col">
+                <h4>Мои ответы</h4>
+                {% for answer in answers %}
+                    {{ forloop.counter }}.
+                        <a href="{% url "questions:answer_edit" pk=answer.id %}">{{ answer.name }}</a><br>
+                {% endfor %}
+            </div>
+         </div>
+    </div>
 {% endblock %}

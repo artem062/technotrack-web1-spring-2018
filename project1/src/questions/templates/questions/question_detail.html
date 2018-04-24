@@ -1,5 +1,7 @@
 {% extends "questions/base.html" %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}Вопрос №{{ question.id }}{% endblock %}
 
 {% block context %}
@@ -21,14 +23,9 @@
         {% endif %}
         (с) {{ answer.author }}<br>
     {% endfor %}
-    <form action="" method="post">
+    <form action="" method="post" class="uniForm">
         {% csrf_token %}
-        <label>Ответ: {{ form.name }}</label>
-        <div style="display: none">
-            {{ form.question }}
-            {{ form.author }}
-        </div>
-        {{ form.errors }}
+        {{ form|crispy }}
         <input type="submit" value="Добавить ответ">
     </form>
 {% endblock %}

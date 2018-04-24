@@ -3,7 +3,7 @@
 {% block title %}{{ category.name }}{% endblock %}
 
 {% block context %}
-    <a href="{% url "categories:categories_list" %}">All categoties</a><br>
+    <a href="{% url "categories:categories_list" %}">Вернуться ко всем</a><br>
     ID: {{ category.id }}<br>
     Название: {{ category.name }}<br>
     {% for question in questions %}
