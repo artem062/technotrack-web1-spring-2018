@@ -7,6 +7,8 @@
 {% block title %}Список категорий{% endblock %}
 
 {% block context %}
+    <div align="center"><h4>Список категорий</h4></div>
+
     <div class="container">
         <div class="row">
             <div class="col">
@@ -15,7 +17,7 @@
                     <div class="col-6">Категория</div>
                 </div>
                 {% for category in categories %}
-                    <div class="row">
+                    <div class="row alert alert-success">
                         <div class="col-1">{{ forloop.counter }}</div>
                         <div class="col">
                             <a href="{% url "categories:category_detail" pk=category.id %}">{{ category.name }}</a>
@@ -26,9 +28,8 @@
             <div class="col-3 bg-light">
                 <form action="" method="get" class="uniForm">
                     {{ categories_form|crispy }}
-                    <input type="submit" value="Go">
+                    <input type="submit" value="Go" class="btn btn-success">
                 </form>
-                <a href="{% url 'questions:question_add' %}">Задать вопрос</a>
             </div>
         </div>
     </div>

@@ -5,24 +5,50 @@
 {% block title %}Вопрос №{{ question.id }}{% endblock %}
 
 {% block context %}
-    <a href="{% url "questions:questions_list" %}">Все вопросы</a><br>
-    <b>ID:</b> {{ question.id }}<br>
-    <b>Вопрос:</b> {{ question.name }}<br>
-    <b>Текст вопроса:</b> {{ question.text }}<br>
-    <b>Автор:</b> {{ question.author }}<br>
+    <a href="{% url "questions:questions_list" %}" class="btn btn-dark">Все вопросы</a><br>
+    <div class="container">
+        <div class="row alert alert-primary">
+            <div class="col-2"><b>ID:</b></div>
+            <div class="col">{{ question.id }}</div>
+        </div>
+        <div class="row alert alert-primary">
+            <div class="col-2"><b>Тема вопроса:</b></div>
+            <div class="col">{{ question.name }}</div>
+        </div>
+        <div class="row alert alert-primary">
+            <div class="col-2"><b>Текст вопроса:</b></div>
+            <div class="col">{{ question.text }}</div>
+        </div>
+        <div class="row alert alert-primary">
+            <div class="col-2"><b>Автор:</b></div>
+            <div class="col">{{ question.author }}</div>
+        </div>
+        <div class="row alert alert-primary">
+            <div class="col-2"><b>Создано:</b></div>
+            <div class="col">{{ question.created }}</div>
+        </div>
+    </div>
+
     {% if question.author == user %}
         <a href="{% url "questions:question_edit" pk=question.id %}">Редактировать</a><br>
     {% endif %}
-    Ответы:<br>
-    {% for answer in answers %}
-        {{ forloop.counter }}.
-        {% if answer.author == request.user %}
-            <a href="{% url "questions:answer_edit" pk=answer.id %}">{{ answer.name }}</a>
-        {% else %}
-            {{ answer.name }}
-        {% endif %}
-        (с) {{ answer.author }}<br>
-    {% endfor %}
+    <div align="center"><h4>Ответы</h4></div>
+    <div class="container">
+            {% for answer in answers %}
+                <div class="row alert alert-success">
+                    <div class="col">
+                        {% if answer.author == request.user %}
+                            <a href="{% url "questions:answer_edit" pk=answer.id %}">{{ answer.name }}</a>
+                        {% else %}
+                            {{ answer.name }}
+                        {% endif %}
+                    </div>
+                    <div class="col-2 text-muted small">{{ answer.author }}</div>
+                    <div class="col-3 text-muted small">{{ answer.created }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
     <form action="" method="post" class="uniForm">
         {% csrf_token %}
         {{ form|crispy }}

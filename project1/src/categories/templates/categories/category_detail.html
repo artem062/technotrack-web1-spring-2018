@@ -3,10 +3,24 @@
 {% block title %}{{ category.name }}{% endblock %}
 
 {% block context %}
-    <a href="{% url "categories:categories_list" %}">Вернуться ко всем</a><br>
-    ID: {{ category.id }}<br>
-    Название: {{ category.name }}<br>
+    <a href="{% url "categories:categories_list" %}" class="btn btn-dark">Вернуться ко всем</a><br>
+    <div class="container">
+        <div class="row alert alert-primary">
+            <div class="col-2"><b>ID:</b></div>
+            <div class="col">{{ category.id }}</div>
+        </div>
+        <div class="row alert alert-primary">
+            <div class="col-2"><b>Название:</b></div>
+            <div class="col">{{ category.name }}</div>
+        </div>
+    </div>
+    <div align="center"><h4>Вопросы по категории</h4></div>
     {% for question in questions %}
-    {{ forloop.counter }}. <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a><br>
+        <div class="container">
+            <div class="row alert alert-success">
+                <div class="col-1"> {{ forloop.counter }}.</div>
+                <div class="col"> <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a><br></div>
+            </div>
+        </div>
     {% endfor %}
 {% endblock %}

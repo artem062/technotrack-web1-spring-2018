@@ -19,6 +19,10 @@ class ChangeForm(UserChangeForm):
 
     email = forms.EmailField(required=True)
 
+    class Meta:
+        model = UserChangeForm.Meta.model
+        fields = 'username', 'email',
+
 
 def profile(request):
 
@@ -57,6 +61,10 @@ class RegisterForm(UserCreationForm):
 
     email = forms.EmailField(required=True)
 
+    class Meta:
+        model = User
+        fields = 'username', 'email'
+
 
 def search(request):
     if request.method == 'GET':
@@ -81,11 +89,7 @@ def register(request):
     elif request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            user = User()
-            user.username = data['login']
-            user.email = data['email']
-            user.save()
+            form.save()
             return redirect('core:profile')
         else:
             return render(request, 'core/register.html', {'register_form': form})

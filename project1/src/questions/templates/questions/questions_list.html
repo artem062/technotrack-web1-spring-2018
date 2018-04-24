@@ -11,28 +11,27 @@
         <div class="row">
             <div class="col">
                 <div class="row">
-                    <div class="col-1">№</div>
                     <div class="col">Тема вопроса</div>
                     <div class="col-6">Текст вопроса</div>
-                    <div class="col">Автор</div>
+                    <div class="col-1 small">Автор</div>
+                    <div class="col-2 small">Дата создания</div>
                 </div>
                 {% for question in questions %}
-                    <div class="row">
-                        <div class="col-1">{{ forloop.counter }}</div>
+                    <div class="row alert alert-warning">
                         <div class="col">
                             <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a>
                         </div>
                         <div class="col-6">{{ question.text }}</div>
-                        <div class="col">{{ question.author }}</div>
+                        <div class="col-1 small">{{ question.author }}</div>
+                        <div class="col-2 small">{{ question.created }}</div>
                     </div>
                 {% endfor %}
             </div>
             <div class="col-3 bg-light">
                 <form action="" method="get" class="uniForm">
                     {{ question_form|crispy }}
-                    <input type="submit" value="Go">
+                    <input type="submit" value="Go" class="btn btn-primary">
                 </form>
-                <a href="{% url 'questions:question_add' %}">Задать вопрос</a>
             </div>
         </div>
     </div>

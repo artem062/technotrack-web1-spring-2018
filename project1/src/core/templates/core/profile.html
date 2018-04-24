@@ -7,19 +7,19 @@
 {% block context %}
     <form action="" method="post" class="uniForm">
         {% csrf_token %}
-        <label>Логин: {{ profile_form.username }}</label><br>
-        <label>Email: {{ profile_form.email }}</label>
+        {{ profile_form|crispy }}
+        <input type="submit" value="Сохранить" class="btn btn-success">
     </form>
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col alert alert-success">
                 <h4>Мои вопросы</h4>
                 {% for question in questions %}
                 {{ forloop.counter }}.
                     <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a><br>
                 {% endfor %}
             </div>
-            <div class="col">
+            <div class="col alert alert-primary">
                 <h4>Мои ответы</h4>
                 {% for answer in answers %}
                     {{ forloop.counter }}.

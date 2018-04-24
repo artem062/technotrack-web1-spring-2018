@@ -8,6 +8,6 @@
     <form action="" method="post" class="uniForm">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="submit" value="Отправить">
+        <input type="submit" value="Отправить" class="btn btn-success">
     </form>
 {% endblock %}
