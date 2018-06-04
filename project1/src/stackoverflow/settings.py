@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'categories.apps.CategoriesConfig',
     'questions.apps.QuestionsConfig',
+    'likes.apps.LikesConfig',
     'crispy_forms',
 ]
 

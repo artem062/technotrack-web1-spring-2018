@@ -20,7 +20,7 @@ class QuestionsListForm (forms.Form):
 
 def questions_list(request):
 
-    questions = Question.objects.all()
+    questions = Question.objects.all().filter(is_archive=False)
     form = QuestionsListForm(request.GET)
     if form.is_valid():
         data = form.cleaned_data
@@ -47,7 +47,6 @@ def question_detail(request, pk=None):
     question = get_object_or_404(Question, id=pk)
     context = {
         'question': question,
-        'answers': question.answers.all().filter(is_archive=False).order_by('created'),
     }
     if request.method == 'GET':
         form = AnswerForm(initial={'author': request.user, 'question': question})
@@ -75,6 +74,21 @@ def answer_detail(request, pk=None):
     return render(request, 'questions/answer_edit.html', context)
 
 
+def question_file(request, pk=None):
+
+    question = get_object_or_404(Question, id=pk)
+    context = {
+        'question': question,
+    }
+    return render(request, 'pieces/question_file.html', context)
+
+
+def answers_list(request, pk=None):
+
+    context = {'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'), }
+    return render(request, 'pieces/answers_list.html', context)
+
+
 class QuestionAdd(CreateView):
 
     model = Question
@@ -95,7 +109,7 @@ class QuestionEdit(UpdateView):
     model = Question
     fields = 'name', 'text', 'categories'
     context_object_name = 'question'
-    template_name = 'questions/question_edit.html'
+    template_name = 'pieces/question_edit.html'
 
     def get_queryset(self):
         queryset = super(QuestionEdit, self).get_queryset()
@@ -109,7 +123,7 @@ class QuestionEdit(UpdateView):
 class AnswerEdit(UpdateView):
 
     model = Answer
-    fields = 'name',
+    fields = 'name', 'is_archive',
     context_object_name = 'answer'
     template_name = 'questions/answer_edit.html'
 

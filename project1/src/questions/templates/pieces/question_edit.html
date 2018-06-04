@@ -1,0 +1,8 @@
+{% load crispy_forms_tags %}
+
+<form action="" method="post" class="uniForm saveform"
+      data-url="{% url "questions:question_edit" pk=question.id %}" data-clear="false">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Сохранить" class="btn btn-success">
+</form>
