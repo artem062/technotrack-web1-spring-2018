@@ -1,0 +1,13 @@
+{#<span id="likes-{{ question.id }}">Количество лайков поста</span>#}
+{#<button class="btn ajaxlike" data-url="{% url "likes:question_like" pk=question.id %}" data-objectid="{{ question.id }}">Like</button>#}
+
+
+<form action="" method="post" class="uniForm ajaxform" data-url="{% url "likes:question_like" pk=question.id %}">
+    {% csrf_token %}
+    <div style="display: none;">{{ form }}</div>
+    {% if is_liked %}
+        <input type="submit" value="Dislike {{ likes }}" class="btn btn-danger">
+    {% else %}
+         <input type="submit" value="Like {{ likes }}" class="btn btn-success">
+    {% endif %}
+</form>

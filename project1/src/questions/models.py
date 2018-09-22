@@ -6,15 +6,24 @@ from django.conf import settings
 from categories.models import Category
 
 
+class QuestionQuerySet(models.QuerySet):
+
+    def count_answers(self):
+        return self.annotate(answers_count=models.Count('answers__id'))
+
+
 class Question(models.Model):
 
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='questions', verbose_name=u'Автор')
     categories = models.ManyToManyField(Category, blank=True, related_name='questions', verbose_name=u'Категории')
     name = models.CharField(max_length=255, verbose_name=u'Тема вопроса')
     text = models.CharField(max_length=1023, verbose_name=u'Текст вопроса')
-    is_archive = models.BooleanField(default=False, verbose_name=u'в архиве')
+    is_archive = models.BooleanField(default=False, verbose_name=u'Удалено')
     created = models.DateTimeField(auto_now_add=True, verbose_name=u'Создано')
     updated = models.DateTimeField(auto_now=True, verbose_name=u'Обновлено')
+    likes_count = models.IntegerField(default=0)
+
+    objects = QuestionQuerySet.as_manager()
 
     class Meta:
         verbose_name = u'Вопрос'
@@ -30,7 +39,7 @@ class Answer(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='answers', verbose_name=u'Автор')
     question = models.ForeignKey(Question,  related_name='answers', verbose_name=u'Вопрос')
     name = models.CharField(max_length=255, verbose_name=u'Ответ')
-    is_archive = models.BooleanField(default=False, verbose_name=u'в архиве')
+    is_archive = models.BooleanField(default=False, verbose_name=u'Удалено')
     created = models.DateTimeField(auto_now_add=True, verbose_name=u'Создано')
     updated = models.DateTimeField(auto_now=True, verbose_name=u'Обновлено')
 

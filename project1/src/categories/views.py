@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from django.shortcuts import render, HttpResponse, get_object_or_404
 from .models import Category
 from django import forms
-from likes.models import Like
 
 
 class CategoriesListForm (forms.Form):
@@ -37,11 +36,8 @@ def category_list(request):
 def category_detail(request, pk=None):
 
     category = get_object_or_404(Category, id=pk)
-    likes = Like.objects.all()
-
     context = {
         'category': category,
         'questions': category.questions.all().filter(is_archive=False),
-        'likes': likes
     }
     return render(request, 'categories/category_detail.html', context)

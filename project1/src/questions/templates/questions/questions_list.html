@@ -11,21 +11,28 @@
         <div class="row">
             <div class="col">
                 <div class="row">
-                    <div class="col">Тема вопроса</div>
-                    <div class="col-6">Текст вопроса</div>
+                    <div class="col-2">Тема вопроса</div>
+                    <div class="col">Текст вопроса</div>
                     <div class="col-1 small">Автор</div>
                     <div class="col-2 small">Дата создания</div>
+                    <div class="col-1 small">Ответов</div>
+                    <div class="col-2 small">Лайки</div>
                 </div>
-                {% for question in questions %}
-                    <div class="row alert alert-warning">
-                        <div class="col">
-                            <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a>
-                        </div>
-                        <div class="col-6">{{ question.text }}</div>
-                        <div class="col-1 small">{{ question.author }}</div>
-                        <div class="col-2 small">{{ question.created }}</div>
-                    </div>
-                {% endfor %}
+                <div class="autoload">
+                    {% include "pieces/questions_list.html" %}
+                </div>
+{#                {% for question in questions %}#}
+{#                    <div class="row alert alert-warning">#}
+{#                        <div class="col-2">#}
+{#                            <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a>#}
+{#                        </div>#}
+{#                        <div class="col">{{ question.text }}</div>#}
+{#                        <div class="col-1 small">{{ question.author }}</div>#}
+{#                        <div class="col-2 small">{{ question.created }}</div>#}
+{#                        <div class="col-1 small" align="center">{{ question.answers_count }}</div>#}
+{#                        <div class="col-2 autoload" data-url="{% url "likes:question_like" pk=question.id %}"></div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
             </div>
             <div class="col-3 bg-light">
                 <form action="" method="get" class="uniForm">

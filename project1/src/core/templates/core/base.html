@@ -1,14 +1,17 @@
 {% load static %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="csrf" content="{{ csrf_token }}">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{% static "bootstrap-4.1.0/dist/css/bootstrap.css" %}" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static "base.css" %}" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static "chosen/chosen.css" %}" crossorigin="anonymous">
 
         <title>{% block title %}My Site{% endblock %} - MS</title>
     </head>
@@ -23,10 +26,10 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                  <a class="nav-link" href="{% url "categories:categories_list" %}">Список категорий <span class="sr-only">(current)</span></a>
+                  <a class="nav-link" href="{% url "categories:categories_list" %}">Список категорий ({{ total_categories }}) <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                  <a class="nav-link" href="{% url "questions:questions_list" %}">Список вопросов</a>
+                  <a class="nav-link" href="{% url "questions:questions_list" %}">Список вопросов ({{ total_questions }})</a>
                 </li>
                 <li class="nav-item active">
                   <a class="nav-link disabled" href="{% url "questions:question_add" %}">Задать вопрос</a>
@@ -67,9 +70,7 @@
         <script src="{% static "bootstrap-4.1.0/dist/js/popper.min.js" %}" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
         <script src="{% static "bootstrap-4.1.0/dist/js/bootstrap.js" %}" crossorigin="anonymous"></script>
         <script src="{% static "bootstrap-4.1.0/dist/js/jquery-3.3.1.js" %}" crossorigin="anonymous"></script>
-        <script src="{% static "bootstrap.css" %}" crossorigin="anonymous"></script>
         <script src="{% static "base.js" %}"></script>
         <script src="{% static "chosen/chosen.jquery.js" %}" crossorigin="anonymous"></script>
-        <script src="{% static "chosen/chosen.css" %}" crossorigin="anonymous"></script>
     </body>
 </html>

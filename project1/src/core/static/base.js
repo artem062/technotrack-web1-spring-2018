@@ -4,6 +4,22 @@ $(document).ready(
             $(this).load($(this).data('url'));
         });
 
+        $('.load_now').each(function () {
+            $(this).load($(this).data('url'));
+        });
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", $('meta[name=csrf]').attr("content"));
+                }
+            }
+        });
+
         var update = true;
 
         window.setInterval(function () {
@@ -41,8 +57,10 @@ $(document).ready(
             );
              update = false;
             $('.editform').each(function () {
-                $(this).load($(this).data('editurl'));
-            });
+                $(this).load($(this).data('editurl'), function () {
+                   $('#id_categories').chosen({rtl: true})
+                });
+            })
             return false
         });
 
@@ -55,7 +73,5 @@ $(document).ready(
             return false
         });
 
-
-        $('#categories').chosen({rtl: true})
     }
 );

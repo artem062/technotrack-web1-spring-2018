@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404, reverse
 from .models import Question, Answer
+from likes.models import QuestionLike
 from django import forms
 from django.views.generic import UpdateView, CreateView
 
@@ -20,7 +21,8 @@ class QuestionsListForm (forms.Form):
 
 def questions_list(request):
 
-    questions = Question.objects.all().filter(is_archive=False)
+    questions = Question.objects.count_answers().filter(is_archive=False).select_related('author')
+    # questions = questions.prefetch_related('likes',)
     form = QuestionsListForm(request.GET)
     if form.is_valid():
         data = form.cleaned_data
@@ -29,7 +31,7 @@ def questions_list(request):
         if data['search']:
             questions = questions.filter(name__icontains=data['search'])
     context = {
-        'questions': questions,
+        'questions': questions.count_answers,
         'question_form': form
     }
     return render(request, 'questions/questions_list.html', context)
@@ -44,9 +46,12 @@ class AnswerForm(forms.ModelForm):
 
 def question_detail(request, pk=None):
 
-    question = get_object_or_404(Question, id=pk)
+    question = get_object_or_404(Question.objects.count_answers(), id=pk)
+    likes = QuestionLike.objects.filter(question=question)
     context = {
         'question': question,
+        'likes': likes.count(),
+        'is_liked': likes.filter(author=request.user).exists()
     }
     if request.method == 'GET':
         form = AnswerForm(initial={'author': request.user, 'question': question})
@@ -81,6 +86,16 @@ def question_file(request, pk=None):
         'question': question,
     }
     return render(request, 'pieces/question_file.html', context)
+
+
+def question_list_base(request):
+
+    questions = Question.objects.all().filter(is_archive=False).select_related('author')
+    context = {
+        'questions': questions,
+        'is_liked': QuestionLike.objects.filter(author=request.user)
+    }
+    return render(request, 'pieces/questions_list.html', context)
 
 
 def answers_list(request, pk=None):

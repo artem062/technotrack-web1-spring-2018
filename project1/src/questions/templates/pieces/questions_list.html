@@ -1,0 +1,30 @@
+<div class="col">
+    <div class="row">
+        <div class="col-2">Тема вопроса</div>
+        <div class="col">Текст вопроса</div>
+        <div class="col-1 small">Автор</div>
+        <div class="col-2 small">Дата создания</div>
+        <div class="col-2 small">Лайки</div>
+    </div>
+    {% for question in questions %}
+        <div class="row alert alert-warning">
+            <div class="col-2">
+                <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a>
+            </div>
+            <div class="col">{{ question.text }}</div>
+            <div class="col-1 small">{{ question.author }}</div>
+            <div class="col-2 small">{{ question.created }}</div>
+            <div class="col-2">
+                <form action="{% url "likes:question_like" pk=question.id %}" method="post" class="uniForm ajaxform" data-url="{% url "likes:question_like" pk=question.id %}">
+                    {% csrf_token %}
+                    <div style="display: none;">{{ form }}</div>
+                    {% if is_liked %}
+                        <input type="submit" value="Dislike {{ question.likes_count }}" class="btn btn-danger">
+                    {% else %}
+                        <input type="submit" value="Like {{ question.likes_count }}" class="btn btn-success">
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+</div>

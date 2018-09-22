@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^', include('core.urls', namespace='core')),
     url(r'^category/', include('categories.urls', namespace='categories')),
     url(r'^question/', include('questions.urls', namespace='questions')),
+    url(r'^likes/', include('likes.urls', namespace='likes')),
 ]
 
 if settings.DEBUG:

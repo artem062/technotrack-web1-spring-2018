@@ -1,12 +1,13 @@
 from django.conf.urls import url
 from questions.views import question_detail, questions_list, QuestionEdit, \
-    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file
+    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file, question_list_base
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
 
     url(r'^(?P<pk>\d+)/$', question_detail, name='question_detail'),
     url(r'^$', questions_list, name='questions_list'),
+    url(r'^base$', question_list_base, name='questions_list_base'),
     url(r'^add/$', login_required(QuestionAdd.as_view()), name='question_add'),
     url(r'^edit/(?P<pk>\d+)/$', QuestionEdit.as_view(), name='question_edit'),
     url(r'^answer/(?P<pk>\d+)/$', answer_detail, name='answer_detail'),

@@ -5,13 +5,18 @@
 {% block title %}Вопрос №{{ question.id }}{% endblock %}
 
 {% block context %}
-
-    <a href="{% url "questions:questions_list" %}" class="btn btn-dark">Все вопросы</a>
+    <div class="row">
+        <div class="col">
+            <a href="{% url "questions:questions_list" %}" class="btn btn-dark">Все вопросы</a>
+        </div>
+        <div class="col-3" align="right">
+            <div class="autoload" data-url="{% url "likes:question_like" pk=question.id %}"></div>
+        </div>
+    </div>
 
     <div class="editform" data-url="{% url "questions:question_file" pk=question.id %}"
          data-editurl="{% url "questions:question_edit" pk=question.id %}"></div>
 
-    <div align="center"><h4>Ответы</h4></div>
     <div class="autoload" data-url="{% url "questions:answers_list" pk=question.id %}"></div>
 
     <form action="" method="post" class="uniForm ajaxform"
