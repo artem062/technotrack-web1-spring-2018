@@ -7,6 +7,7 @@ from django.db import models
 class Category(models.Model):
 
     name = models.CharField(max_length=255, verbose_name=u'Имя категории')
+    photo = models.FileField(null=True, upload_to='photos')
 
     class Meta:
         verbose_name = u'Категория'

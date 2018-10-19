@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
+import storages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'questions.apps.QuestionsConfig',
     'likes.apps.LikesConfig',
     'crispy_forms',
+    'social_django',
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -72,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_data.stats',
+                'social_django.context_processors.backends',
             ],
         },
     },
@@ -100,6 +104,10 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.vk.VKOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -150,3 +158,32 @@ REGISTER_URL = 'core:register'
 LOGIN_REDIRECT_URL = 'core:profile'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+# STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_S3_ENDPOINT_URL = 'https://hb.bizmrg.com'
+AWS_ACCESS_KEY_ID = 'kzABZBUVnpuDqiYd5BPMHA'
+AWS_SECRET_ACCESS_KEY = 'bDt94aBqJWq5P91vBm9bowxoupWt3V8x3PaGGSVkYQBG'
+AWS_STORAGE_BUCKET_NAME = 'backend'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'storage', 'media')
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'storage', 'static')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = ('static', )
+
+TESTING = 'test' in sys.argv
+
+if TESTING:
+    DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+    STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '6723064'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'ssoDAfPrTo5OFRczveia'
+LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']

@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render, HttpResponse, redirect, get_object_or_404, reverse
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 from .models import Question, Answer
 from likes.models import QuestionLike
 from django import forms
 from django.views.generic import UpdateView, CreateView
+from django.http import JsonResponse
+from jsonrpc import jsonrpc_method
+from django.core.serializers import serialize
 
 
 class QuestionsListForm (forms.Form):
@@ -19,10 +22,27 @@ class QuestionsListForm (forms.Form):
     search = forms.CharField(required=False, label='Поиск')
 
 
+# def questions_list(request):
+#
+#     questions = Question.objects.count_answers().filter(is_archive=False).select_related('author')
+#     form = QuestionsListForm(request.GET)
+#     if form.is_valid():
+#         data = form.cleaned_data
+#         if data['sort']:
+#             questions = questions.order_by(data['sort'])
+#         if data['search']:
+#             questions = questions.filter(name__icontains=data['search'])
+#     context = {
+#         'questions': questions.count_answers,
+#         'question_form': form
+#     }
+#     return render(request, 'questions/questions_list.html', context)
+
+
+@jsonrpc_method('api.questions_list')
 def questions_list(request):
 
     questions = Question.objects.count_answers().filter(is_archive=False).select_related('author')
-    # questions = questions.prefetch_related('likes',)
     form = QuestionsListForm(request.GET)
     if form.is_valid():
         data = form.cleaned_data
@@ -30,11 +50,10 @@ def questions_list(request):
             questions = questions.order_by(data['sort'])
         if data['search']:
             questions = questions.filter(name__icontains=data['search'])
-    context = {
-        'questions': questions.count_answers,
-        'question_form': form
-    }
-    return render(request, 'questions/questions_list.html', context)
+    return JsonResponse({
+        'questions': serialize('json', questions),
+        # 'question_form': form
+    })
 
 
 class AnswerForm(forms.ModelForm):
@@ -44,6 +63,35 @@ class AnswerForm(forms.ModelForm):
         fields = 'name',
 
 
+# def question_detail(request, pk=None):
+#
+#     question = get_object_or_404(Question.objects.count_answers(), id=pk)
+#     likes = QuestionLike.objects.filter(question=question)
+#     context = {
+#         'question': question,
+#         'likes': likes.count(),
+#     }
+#     if request.user.id is not None and likes.filter(author=request.user).exists():
+#         context['is_liked'] = True
+#     else:
+#         context['is_liked'] = False
+#     if request.method == 'GET':
+#         form = AnswerForm(initial={'author': request.user, 'question': question})
+#         context['form'] = form
+#         return render(request, 'questions/question_detail.html', context)
+#     elif request.method == 'POST' and request.user.id is not None:
+#         form = AnswerForm(request.POST)
+#         if form.is_valid():
+#             data = form.cleaned_data
+#             answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
+#             answer.save()
+#             return redirect('questions:question_detail', pk=question.pk)
+#         else:
+#             context['form'] = form
+#             return render(request, 'questions/question_detail.html', context)
+
+
+@jsonrpc_method('api.question_detail')
 def question_detail(request, pk=None):
 
     question = get_object_or_404(Question.objects.count_answers(), id=pk)
@@ -51,12 +99,14 @@ def question_detail(request, pk=None):
     context = {
         'question': question,
         'likes': likes.count(),
-        'is_liked': likes.filter(author=request.user).exists()
     }
+    if request.user.id is not None and likes.filter(author=request.user).exists():
+        context['is_liked'] = True
+    else:
+        context['is_liked'] = False
     if request.method == 'GET':
         form = AnswerForm(initial={'author': request.user, 'question': question})
         context['form'] = form
-        return render(request, 'questions/question_detail.html', context)
     elif request.method == 'POST':
         form = AnswerForm(request.POST)
         if form.is_valid():
@@ -66,42 +116,84 @@ def question_detail(request, pk=None):
             return redirect('questions:question_detail', pk=question.pk)
         else:
             context['form'] = form
-            return render(request, 'questions/question_detail.html', context)
+    return JsonResponse({
+        'question': serialize('json', Question.objects.all().filter(id=pk)),
+        'likes': context['likes'],
+        'is_liked': context['is_liked']
+    })
 
 
+# def answer_detail(request, pk=None):
+#
+#     answer = get_object_or_404(Answer, id=pk)
+#     context = {
+#         'answer': answer,
+#         'question': answer.question
+#     }
+#     return render(request, 'questions/answer_edit.html', context)
+
+
+@jsonrpc_method('api.answer_detail')
 def answer_detail(request, pk=None):
 
     answer = get_object_or_404(Answer, id=pk)
-    context = {
-        'answer': answer,
-        'question': answer.question
-    }
-    return render(request, 'questions/answer_edit.html', context)
+    return JsonResponse({
+        'answer': serialize('json', Answer.objects.all().filter(id=pk)),
+        'question': serialize('json', answer.question),
+    })
 
 
+# def question_file(request, pk=None):
+#
+#     question = get_object_or_404(Question, id=pk)
+#     context = {
+#         'question': question,
+#     }
+#     return render(request, 'pieces/question_file.html', context)
+
+
+@jsonrpc_method('api.question_file')
 def question_file(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
-    context = {
-        'question': question,
-    }
-    return render(request, 'pieces/question_file.html', context)
+    return JsonResponse({
+        'question': serialize('json', Question.objects.all().filter(id=pk))
+    })
 
 
+# def question_list_base(request):
+#
+#     questions = Question.objects.all().filter(is_archive=False).select_related('author')
+#     context = {
+#         'questions': questions,
+#         'is_liked': QuestionLike.objects.filter(author=request.user)
+#     }
+#     return render(request, 'pieces/questions_list.html', context)
+
+
+@jsonrpc_method('api.question_list_base')
 def question_list_base(request):
 
     questions = Question.objects.all().filter(is_archive=False).select_related('author')
     context = {
-        'questions': questions,
-        'is_liked': QuestionLike.objects.filter(author=request.user)
+        'questions': serialize('json', questions),
+        'is_liked': serialize('json', QuestionLike.objects.filter(author=request.user))
     }
-    return render(request, 'pieces/questions_list.html', context)
+    return JsonResponse(context)
 
 
+# def answers_list(request, pk=None):
+#
+#     context = {'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'), }
+#     return render(request, 'pieces/answers_list.html', context)
+
+
+@jsonrpc_method('api.answers_list')
 def answers_list(request, pk=None):
 
-    context = {'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'), }
-    return render(request, 'pieces/answers_list.html', context)
+    return JsonResponse({
+        'answers': serialize('json', Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created')),
+    })
 
 
 class QuestionAdd(CreateView):
@@ -149,3 +241,4 @@ class AnswerEdit(UpdateView):
 
     def get_success_url(self):
         return reverse('questions:question_detail', kwargs={'pk': self.object.question.id})
+
