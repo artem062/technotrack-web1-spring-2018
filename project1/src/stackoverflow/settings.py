@@ -104,11 +104,6 @@ DATABASES = {
     }
 }
 
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.vk.VKOAuth2',
-    'django.contrib.auth.backends.ModelBackend',
-)
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -159,10 +154,10 @@ LOGIN_REDIRECT_URL = 'core:profile'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-# DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_S3_ENDPOINT_URL = 'https://hb.bizmrg.com'
 AWS_ACCESS_KEY_ID = 'kzABZBUVnpuDqiYd5BPMHA'
@@ -174,7 +169,7 @@ MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'storage', 'static')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ('static', )
+# STATICFILES_DIRS = ('static', )
 
 TESTING = 'test' in sys.argv
 
@@ -183,7 +178,24 @@ if TESTING:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.vk.VKOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+)
+LOGIN_REDIRECT_URL = '/'
+
 SOCIAL_AUTH_VK_OAUTH2_KEY = '6723064'
 SOCIAL_AUTH_VK_OAUTH2_SECRET = 'ssoDAfPrTo5OFRczveia'
-LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
+
+
+SOCIAL_AUTH_GITHUB_KEY = '40ce80326df20f71400e'
+SOCIAL_AUTH_GITHUB_SECRET = '7d2abcf0928d630409075ac2d11e898ca3f413b2'
+SOCIAL_AUTH_GITHUB_SCOPE = ['email']
+
+SOCIAL_AUTH_FACEBOOK_KEY = '476705162821154'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'fa3fc8f85a8f15b3459d5b635fe62c39'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']

@@ -61,11 +61,21 @@
 
         <div align="right">
             {% if request.user.is_authenticated %}
-                Пользователь: <a href="{% url 'core:profile' %}" class="btn btn-success">{{ request.user }}</a>
+                Пользователь: <a href="{% url 'core:profile' %}" class="btn btn-success">
+                {% if request.user.get_full_name %}
+                    {{ request.user.get_full_name }}
+                {% else %}
+                    {{ request.user }}
+                {% endif %}
+                </a>
                 <a href="{% url 'core:logout' %}" class="btn btn-danger">Выйти</a><br>
             {% else %}
-                <a href="/login/vk-oauth2" class="btn btn-primary">Login with VK</a>
-{#                <a href="{% url 'core:login' %}" class="btn btn-success">Войти</a><br>#}
+                <a href="{% url 'core:login' %}" class="btn btn-success">Войти</a>
+                <a href="/login/vk-oauth2" class="btn btn-primary">Войти через VK</a>
+                <a href="/login/github/" class="btn btn-dark">Войти через Github</a>
+                <a href="/login/facebook" class="btn btn-primary">Войти через Facebook</a>
+                <login-button scope="public_profile,email" onlogin="checkLoginState();">
+                </login-button>
             {% endif %}
         </div>
         </footer>
