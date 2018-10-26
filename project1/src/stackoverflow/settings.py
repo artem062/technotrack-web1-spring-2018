@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'likes.apps.LikesConfig',
     'crispy_forms',
     'social_django',
+    'adjacent',
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -199,3 +200,7 @@ SOCIAL_AUTH_GITHUB_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_KEY = '476705162821154'
 SOCIAL_AUTH_FACEBOOK_SECRET = 'fa3fc8f85a8f15b3459d5b635fe62c39'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+CENTRIFUGE_ADDRESS = 'http://localhost:8080'
+CENTRIFUGE_SECRET = 'c74900d9-462a-4244-80ef-8c30ec8692ad'
+CENTRIFUGE_TIMEOUT = 10

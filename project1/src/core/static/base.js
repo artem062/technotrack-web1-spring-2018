@@ -20,7 +20,7 @@ $(document).ready(
             }
         });
 
-        var update = true;
+        let update = true;
 
         window.setInterval(function () {
                 $('.autoload').each(function () {
@@ -73,5 +73,17 @@ $(document).ready(
             return false
         });
 
+        $('.answers').each(function () {
+            const obj = $(this);
+            obj.load(obj.data('url'));
+            const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe('update_answers', function (message) {
+                if (obj.data('pk') === message.data.answers) {
+                    obj.load(obj.data('url'));
+                }
+            });
+            centrifuge.connect();
+        });
     }
 );

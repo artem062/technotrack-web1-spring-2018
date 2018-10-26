@@ -9,6 +9,8 @@ from django.views.generic import UpdateView, CreateView
 from django.http import JsonResponse
 from jsonrpc import jsonrpc_method
 from django.core.serializers import serialize
+from adjacent.utils import get_connection_parameters
+from adjacent.client import Client
 
 
 class QuestionsListForm (forms.Form):
@@ -63,6 +65,9 @@ class AnswerForm(forms.ModelForm):
         fields = 'name',
 
 
+import jwt
+import time
+
 def question_detail(request, pk=None):
 
     question = get_object_or_404(Question.objects.count_answers(), id=pk)
@@ -70,6 +75,7 @@ def question_detail(request, pk=None):
     context = {
         'question': question,
         'likes': likes.count(),
+        'token': get_connection_parameters(request.user)['token'],
     }
     if request.user.id is not None and likes.filter(author=request.user).exists():
         context['is_liked'] = True
@@ -85,6 +91,9 @@ def question_detail(request, pk=None):
             data = form.cleaned_data
             answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
             answer.save()
+            client = Client()
+            client.publish("update_answers", {"answers": question.pk})
+            client.send()
             return redirect('questions:question_detail', pk=question.pk)
         else:
             context['form'] = form

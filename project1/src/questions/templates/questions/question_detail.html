@@ -17,7 +17,11 @@
     <div class="editform" data-url="{% url "questions:question_file" pk=question.id %}"
          data-editurl="{% url "questions:question_edit" pk=question.id %}"></div>
 
-    <div class="autoload" data-url="{% url "questions:answers_list" pk=question.id %}"></div>
+    <div class="answers"
+         data-url="{% url "questions:answers_list" pk=question.id %}"
+         data-pk="{{ question.id }}"
+         data-token="{{ token }}"
+    ></div>
 
     <form action="" method="post" class="uniForm ajaxform"
           data-url="{% url "questions:question_detail" pk=question.id %}" data-clear="true">
