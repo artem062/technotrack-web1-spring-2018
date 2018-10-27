@@ -1,5 +1,7 @@
 {
   "secret": "c74900d9-462a-4244-80ef-8c30ec8692ad",
   "admin_password": "846caaed-1ec3-4824-b4b4-ce78e23abefd",
-  "admin_secret": "27ff141d-4594-4bc6-bbaa-28739d1420fa"
+  "admin_secret": "27ff141d-4594-4bc6-bbaa-28739d1420fa",
+  "port": 8080,
+  "api_insecure":true
 }
