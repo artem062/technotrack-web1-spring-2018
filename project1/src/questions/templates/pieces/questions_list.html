@@ -12,9 +12,14 @@
                 <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a>
             </div>
             <div class="col">{{ question.text }}</div>
-            <div class="col-1 small">{{ question.author }}</div>
+            <div class="col-1 small">
+            {% if question.author.get_full_name %}
+                {{ question.author.get_full_name }}
+            {% else %}
+                {{ question.author }}
+            {% endif %}</div>
             <div class="col-2 small">{{ question.created }}</div>
-            <div class="col-2">
+            <div class="col-2 ">
                 <form action="{% url "likes:question_like" pk=question.id %}" method="post" class="uniForm ajaxform" data-url="{% url "likes:question_like" pk=question.id %}">
                     {% csrf_token %}
                     <div style="display: none;">{{ form }}</div>

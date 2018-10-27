@@ -9,7 +9,12 @@
                     {{ answer.name }}
                 {% endif %}
             </div>
-            <div class="col-2 text-muted small">{{ answer.author }}</div>
+            <div class="col-2 text-muted small">
+                {% if answer.author.get_full_name %}
+                    {{ answer.author.get_full_name }}
+                {% else %}
+                    {{ answer.author }}
+                {% endif %}</div>
             <div class="col-3 text-muted small">{{ answer.created }}</div>
         </div>
     {% endfor %}

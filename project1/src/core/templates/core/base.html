@@ -62,10 +62,10 @@
         <div align="right">
             {% if request.user.is_authenticated %}
                 Пользователь: <a href="{% url 'core:profile' %}" class="btn btn-success">
-                {% if request.user.get_full_name %}
-                    {{ request.user.get_full_name }}
+                {% if user.get_full_name %}
+                    {{ user.get_full_name }}
                 {% else %}
-                    {{ request.user }}
+                    {{ user }}
                 {% endif %}
                 </a>
                 <a href="{% url 'core:logout' %}" class="btn btn-danger">Выйти</a><br>

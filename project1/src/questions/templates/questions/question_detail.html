@@ -10,12 +10,20 @@
             <a href="{% url "questions:questions_list" %}" class="btn btn-dark">Все вопросы</a>
         </div>
         <div class="col-3" align="right">
-            <div class="autoload" data-url="{% url "likes:question_like" pk=question.id %}"></div>
+            <div class="like"
+                 data-url="{% url "likes:question_like" pk=question.id %}"
+                 data-pk="{{ question.id }}"
+                 data-token="{{ token }}"
+            ></div>
         </div>
     </div>
 
-    <div class="editform" data-url="{% url "questions:question_file" pk=question.id %}"
-         data-editurl="{% url "questions:question_edit" pk=question.id %}"></div>
+    <div class="editform"
+         data-url="{% url "questions:question_file" pk=question.id %}"
+         data-editurl="{% url "questions:question_edit" pk=question.id %}"
+         data-pk="{{ question.id }}"
+         data-token="{{ token }}"
+    ></div>
 
     <div class="answers"
          data-url="{% url "questions:answers_list" pk=question.id %}"

@@ -36,7 +36,8 @@ def questions_list(request):
             questions = questions.filter(name__icontains=data['search'])
     context = {
         'questions': questions.count_answers,
-        'question_form': form
+        'question_form': form,
+        'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'questions/questions_list.html', context)
 
@@ -65,22 +66,19 @@ class AnswerForm(forms.ModelForm):
         fields = 'name',
 
 
-import jwt
-import time
-
 def question_detail(request, pk=None):
 
     question = get_object_or_404(Question.objects.count_answers(), id=pk)
-    likes = QuestionLike.objects.filter(question=question)
+    # likes = QuestionLike.objects.filter(question=question)
     context = {
         'question': question,
-        'likes': likes.count(),
+        # 'likes': likes.count(),
         'token': get_connection_parameters(request.user)['token'],
     }
-    if request.user.id is not None and likes.filter(author=request.user).exists():
-        context['is_liked'] = True
-    else:
-        context['is_liked'] = False
+    # if request.user.id is not None and likes.filter(author=request.user).exists():
+    #     context['is_liked'] = True
+    # else:
+    #     context['is_liked'] = False
     if request.method == 'GET':
         form = AnswerForm(initial={'author': request.user, 'question': question})
         context['form'] = form
@@ -92,7 +90,7 @@ def question_detail(request, pk=None):
             answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
             answer.save()
             client = Client()
-            client.publish("update_answers", {"answers": question.pk})
+            client.publish("update_answers_{}".format(question.pk), {})
             client.send()
             return redirect('questions:question_detail', pk=question.pk)
         else:
@@ -175,7 +173,8 @@ def question_list_base(request):
     questions = Question.objects.all().filter(is_archive=False).select_related('author')
     context = {
         'questions': questions,
-        'is_liked': QuestionLike.objects.filter(author=request.user)
+        # 'is_liked': QuestionLike.objects.filter(author=request.user),
+        'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/questions_list.html', context)
 
@@ -193,7 +192,9 @@ def question_list_base(request):
 
 def answers_list(request, pk=None):
 
-    context = {'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'), }
+    context = {
+        'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'),         'token': get_connection_parameters(request.user)['token'],
+    }
     return render(request, 'pieces/answers_list.html', context)
 
 
@@ -218,6 +219,9 @@ class QuestionAdd(CreateView):
         return super(QuestionAdd, self).form_valid(form)
 
     def get_success_url(self):
+        client = Client()
+        client.publish("update_questions_list", {})
+        client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
@@ -234,6 +238,10 @@ class QuestionEdit(UpdateView):
         return queryset
 
     def get_success_url(self):
+        client = Client()
+        client.publish("update_questions_list", {})
+        client.publish("update_question_{}".format(self.object.pk), {})
+        client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
@@ -250,5 +258,8 @@ class AnswerEdit(UpdateView):
         return queryset
 
     def get_success_url(self):
+        client = Client()
+        client.publish("update_answers_{}".format(self.object.question.pk), {})
+        client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.question.id})
 

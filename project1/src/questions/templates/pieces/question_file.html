@@ -14,7 +14,12 @@
         </div>
         <div class="row alert alert-primary">
             <div class="col-2"><b>Автор:</b></div>
-            <div class="col">{{ question.author }}</div>
+            <div class="col">
+                {% if answer.author.get_full_name %}
+                    {{ answer.author.get_full_name }}
+                {% else %}
+                    {{ answer.author }}
+                {% endif %}</div>
         </div>
         <div class="row alert alert-primary">
             <div class="col-2"><b>Создано:</b></div>

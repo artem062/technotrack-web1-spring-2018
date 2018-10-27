@@ -1,13 +1,5 @@
 $(document).ready(
     function () {
-        $('.autoload').each(function () {
-            $(this).load($(this).data('url'));
-        });
-
-        $('.load_now').each(function () {
-            $(this).load($(this).data('url'));
-        });
-
         function csrfSafeMethod(method) {
             // these HTTP methods do not require CSRF protection
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -22,21 +14,33 @@ $(document).ready(
 
         let update = true;
 
+        $('.load_now').each(function () {
+            $(this).load($(this).data('url'));
+        });
+
+        $('.autoload').each(function () {
+            $(this).load($(this).data('url'));
+        });
+
         window.setInterval(function () {
                 $('.autoload').each(function () {
                     $(this).load($(this).data('url'));
                 });
-                if (update) {
-                    $('.editform').each(function () {
-                        $(this).load($(this).data('url'));
-                    });
-                }
             },
             2000
         );
 
         $('.editform').each(function () {
-            $(this).load($(this).data('url'));
+            const obj = $(this);
+            obj.load(obj.data('url'));
+            const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe(`update_question_${obj.data('pk')}`, function () {
+                if (update) {
+                    obj.load(obj.data('url'));
+                }
+            });
+            centrifuge.connect();
         });
 
         $(document).on('submit', '.ajaxform', function () {
@@ -51,11 +55,11 @@ $(document).ready(
         });
 
         $(document).on('submit', '.edited', function () {
-             $.post(
+            $.post(
                 $(this).data('url'),
                 $(this).serialize()
             );
-             update = false;
+            update = false;
             $('.editform').each(function () {
                 $(this).load($(this).data('editurl'), function () {
                    $('#id_categories').chosen({rtl: true})
@@ -78,10 +82,30 @@ $(document).ready(
             obj.load(obj.data('url'));
             const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
             centrifuge.setToken(obj.data('token'));
-            centrifuge.subscribe('update_answers', function (message) {
-                if (obj.data('pk') === message.data.answers) {
-                    obj.load(obj.data('url'));
-                }
+            centrifuge.subscribe(`update_answers_${obj.data('pk')}`, function () {
+                obj.load(obj.data('url'));
+            });
+            centrifuge.connect();
+        });
+
+        $('.like').each(function () {
+            const obj = $(this);
+            obj.load(obj.data('url'));
+            const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe(`update_question_like_${obj.data('pk')}`, function () {
+                obj.load(obj.data('url'));
+            });
+            centrifuge.connect();
+        });
+
+        $('.question_list').each(function () {
+            const obj = $(this);
+            obj.load(obj.data('url'));
+            const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe(`update_questions_list`, function () {
+                obj.load(obj.data('url'));
             });
             centrifuge.connect();
         });
