@@ -55,14 +55,11 @@ class CategoryTestFixtures(TestCase):
     def setUp(self):
         self.data = json.load(open('categories/fixtures/categories.json'))
 
-        # for i in range(6):
-        #     response = self.client.get('/category/{0}/'.format(data[i]['pk']))
-        #     self.assertEqual(response..category.name, 200)
-        #     self.assertEqual(response.status_code, 200)
+        for i in range(6):
+            Category(id=self.data[i]['pk'], name=self.data[i]['fields']['name']).save()
         self.user = Client()
 
     def test_from_fixtures(self):
         for i in range(6):
             response = self.client.get('/category/{0}/'.format(self.data[i]['pk']))
-            self.assertEqual(response.body.category.name, 200)
             self.assertEqual(response.status_code, 200)

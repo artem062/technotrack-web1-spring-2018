@@ -9,7 +9,7 @@ from django.db import models
 from django.http import JsonResponse
 
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-from adjacent import Client
+# from adjacent import Client
 # Create your views here.
 
 
@@ -47,9 +47,9 @@ def question_like(request, pk=None):
             else:
                 questionSet.update(likes_count=models.F('likes_count') + 1)
                 QuestionLike(author=request.user, question_id=question.pk).save()
-            client = Client()
-            client.publish("update_question_like_{}".format(question.pk), {})
-            client.send()
+            # client = Client()
+            # client.publish("update_question_like_{}".format(question.pk), {})
+            # client.send()
             return redirect('likes:question_like', pk=question.pk)
         else:
             context['form'] = form

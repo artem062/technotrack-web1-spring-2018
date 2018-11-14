@@ -102,6 +102,10 @@ DATABASES = {
         'USER': 'artem',
         'PASSWORD': '761804',
         'HOST': 'localhost',
+        # 'NAME': os.environ.get('DB_NAME'),
+        # 'USER': os.environ.get('DB_USER'),
+        # 'PASSWORD': os.environ.get('DB_PASSWORD'),
+        # 'HOST': os.environ.get('DB_HOST')
     }
 }
 
@@ -160,17 +164,17 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 # STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
-AWS_S3_ENDPOINT_URL = 'https://hb.bizmrg.com'
-AWS_ACCESS_KEY_ID = 'kzABZBUVnpuDqiYd5BPMHA'
-AWS_SECRET_ACCESS_KEY = 'bDt94aBqJWq5P91vBm9bowxoupWt3V8x3PaGGSVkYQBG'
-AWS_STORAGE_BUCKET_NAME = 'backend'
+# AWS_S3_ENDPOINT_URL = 'https://hb.bizmrg.com'
+# AWS_ACCESS_KEY_ID = 'kzABZBUVnpuDqiYd5BPMHA'
+# AWS_SECRET_ACCESS_KEY = 'bDt94aBqJWq5P91vBm9bowxoupWt3V8x3PaGGSVkYQBG'
+# AWS_STORAGE_BUCKET_NAME = 'backend'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'storage', 'media')
-MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'storage', 'media')
+# MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'storage', 'static')
-STATIC_URL = '/static/'
-# STATICFILES_DIRS = ('static', )
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = ('core/static', )
 
 TESTING = 'test' in sys.argv
 

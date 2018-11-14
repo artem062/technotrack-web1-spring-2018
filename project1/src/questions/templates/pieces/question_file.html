@@ -15,10 +15,10 @@
         <div class="row alert alert-primary">
             <div class="col-2"><b>Автор:</b></div>
             <div class="col">
-                {% if answer.author.get_full_name %}
-                    {{ answer.author.get_full_name }}
+                {% if question.author.get_full_name %}
+                    {{ question.author.get_full_name }}
                 {% else %}
-                    {{ answer.author }}
+                    {{ question.author }}
                 {% endif %}</div>
         </div>
         <div class="row alert alert-primary">

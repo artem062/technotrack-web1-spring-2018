@@ -9,8 +9,8 @@ from django.views.generic import UpdateView, CreateView
 from django.http import JsonResponse
 from jsonrpc import jsonrpc_method
 from django.core.serializers import serialize
-from adjacent.utils import get_connection_parameters
-from adjacent.client import Client
+# from adjacent.utils import get_connection_parameters
+# from adjacent.client import Client
 
 
 class QuestionsListForm (forms.Form):
@@ -37,7 +37,7 @@ def questions_list(request):
     context = {
         'questions': questions.count_answers,
         'question_form': form,
-        'token': get_connection_parameters(request.user)['token'],
+        # 'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'questions/questions_list.html', context)
 
@@ -69,16 +69,10 @@ class AnswerForm(forms.ModelForm):
 def question_detail(request, pk=None):
 
     question = get_object_or_404(Question.objects.count_answers(), id=pk)
-    # likes = QuestionLike.objects.filter(question=question)
     context = {
         'question': question,
-        # 'likes': likes.count(),
-        'token': get_connection_parameters(request.user)['token'],
+        # 'token': get_connection_parameters(request.user)['token'],
     }
-    # if request.user.id is not None and likes.filter(author=request.user).exists():
-    #     context['is_liked'] = True
-    # else:
-    #     context['is_liked'] = False
     if request.method == 'GET':
         form = AnswerForm(initial={'author': request.user, 'question': question})
         context['form'] = form
@@ -89,9 +83,9 @@ def question_detail(request, pk=None):
             data = form.cleaned_data
             answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
             answer.save()
-            client = Client()
-            client.publish("update_answers_{}".format(question.pk), {})
-            client.send()
+            # client = Client()
+            # client.publish("update_answers_{}".format(question.pk), {})
+            # client.send()
             return redirect('questions:question_detail', pk=question.pk)
         else:
             context['form'] = form
@@ -174,7 +168,7 @@ def question_list_base(request):
     context = {
         'questions': questions,
         # 'is_liked': QuestionLike.objects.filter(author=request.user),
-        'token': get_connection_parameters(request.user)['token'],
+        # 'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/questions_list.html', context)
 
@@ -193,7 +187,8 @@ def question_list_base(request):
 def answers_list(request, pk=None):
 
     context = {
-        'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'),         'token': get_connection_parameters(request.user)['token'],
+        'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'),
+        # 'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/answers_list.html', context)
 
@@ -219,9 +214,9 @@ class QuestionAdd(CreateView):
         return super(QuestionAdd, self).form_valid(form)
 
     def get_success_url(self):
-        client = Client()
-        client.publish("update_questions_list", {})
-        client.send()
+        # client = Client()
+        # client.publish("update_questions_list", {})
+        # client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
@@ -238,10 +233,10 @@ class QuestionEdit(UpdateView):
         return queryset
 
     def get_success_url(self):
-        client = Client()
-        client.publish("update_questions_list", {})
-        client.publish("update_question_{}".format(self.object.pk), {})
-        client.send()
+        # client = Client()
+        # client.publish("update_questions_list", {})
+        # client.publish("update_question_{}".format(self.object.pk), {})
+        # client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
@@ -258,8 +253,8 @@ class AnswerEdit(UpdateView):
         return queryset
 
     def get_success_url(self):
-        client = Client()
-        client.publish("update_answers_{}".format(self.object.question.pk), {})
-        client.send()
+        # client = Client()
+        # client.publish("update_answers_{}".format(self.object.question.pk), {})
+        # client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.question.id})
 
