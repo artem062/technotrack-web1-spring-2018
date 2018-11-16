@@ -129,7 +129,7 @@ def answer_detail(request, pk=None):
     answer = get_object_or_404(Answer, id=pk)
     context = {
         'answer': answer,
-        'question': answer.question
+        'question': answer.question.values('id', 'name')
     }
     return render(request, 'questions/answer_edit.html', context)
 
@@ -187,7 +187,7 @@ def question_list_base(request):
 def answers_list(request, pk=None):
 
     context = {
-        'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created'),
+        'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created').values(),
         # 'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/answers_list.html', context)

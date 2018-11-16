@@ -6,11 +6,8 @@ from django.views.generic import CreateView
 from django.views import View
 from django import forms
 from django.db import models
-from django.http import JsonResponse
-
+# from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-# from adjacent import Client
-# Create your views here.
 
 
 class QuestionLikeForm(forms.ModelForm):

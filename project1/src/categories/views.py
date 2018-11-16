@@ -4,9 +4,9 @@ from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404
 from .models import Category
 from django import forms
-from django.http import JsonResponse
-from jsonrpc import jsonrpc_method
-from django.core.serializers import serialize
+# from django.http import JsonResponse
+# from jsonrpc import jsonrpc_method
+# from django.core.serializers import serialize
 
 
 class CategoriesListForm (forms.Form):
@@ -21,7 +21,7 @@ class CategoriesListForm (forms.Form):
 
 def category_list(request):
 
-    categories = Category.objects.all()
+    categories = Category.objects.values('id', 'name')
     form = CategoriesListForm(request.GET)
     if form.is_valid():
         data = form.cleaned_data
@@ -55,7 +55,7 @@ def category_detail(request, pk=None):
     category = get_object_or_404(Category, id=pk)
     context = {
         'category': category,
-        'questions': category.questions.all().filter(is_archive=False),
+        'questions': category.questions.all().filter(is_archive=False).values('id', 'name'),
     }
     return render(request, 'categories/category_detail.html', context)
 

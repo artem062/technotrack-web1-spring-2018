@@ -40,8 +40,8 @@ def profile(request):
 
     user = User.objects.get(id=request.user.id)
     context = {
-        'questions': Question.objects.filter(author=request.user),
-        'answers': Answer.objects.filter(author=request.user)
+        'questions': Question.objects.filter(author=request.user).values('id', 'name'),
+        'answers': Answer.objects.filter(author=request.user).values('id', 'name')
     }
     if request.method == 'GET':
         context['profile_form'] = ChangeForm(instance=user)
