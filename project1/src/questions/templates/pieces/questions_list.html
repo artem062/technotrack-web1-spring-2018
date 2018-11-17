@@ -7,7 +7,7 @@
         <div class="col-2 small">Лайки</div>
     </div>
     {% for question in questions %}
-        <div class="row alert alert-warning">
+        <div class="row alert alert-warning" onClick="window.location.href='{% url "questions:question_detail" pk=question.id %}'">
             <div class="col-2">
                 <a href="{% url "questions:question_detail" pk=question.id %}">{{ question.name }}</a>
             </div>

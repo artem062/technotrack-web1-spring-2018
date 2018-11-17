@@ -7,6 +7,7 @@ from django import forms
 # from django.http import JsonResponse
 # from jsonrpc import jsonrpc_method
 # from django.core.serializers import serialize
+from core.prof import profiler
 
 
 class CategoriesListForm (forms.Form):
@@ -19,6 +20,7 @@ class CategoriesListForm (forms.Form):
     search = forms.CharField(required=False, label='Поиск')
 
 
+@profiler
 def category_list(request):
 
     categories = Category.objects.values('id', 'name')
@@ -50,6 +52,7 @@ def category_list(request):
 #     return JsonResponse({'categories': serialize('json', categories)})
 
 
+@profiler
 def category_detail(request, pk=None):
 
     category = get_object_or_404(Category, id=pk)

@@ -8,7 +8,7 @@ from django import forms
 from django.db import models
 # from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-
+from core.prof import profiler
 
 class QuestionLikeForm(forms.ModelForm):
 
@@ -17,10 +17,11 @@ class QuestionLikeForm(forms.ModelForm):
         fields = 'author', 'question'
 
 
+@profiler
 def question_like(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
-    likes = QuestionLike.objects.filter(question=question)
+    likes = QuestionLike.objects.filter(question=question).values()
     context = {
         'question': question,
         'likes': likes.count(),
@@ -36,11 +37,10 @@ def question_like(request, pk=None):
     elif request.method == 'POST' and request.user.id is not None:
         form = QuestionLikeForm(request.POST)
         if form.is_valid():
-            thislike = QuestionLike.objects.filter(question=question, author=request.user)
             questionSet = Question.objects.filter(id=pk)
-            if thislike.exists():
+            if context['is_liked']:
                 questionSet.update(likes_count=models.F('likes_count') - 1)
-                thislike.delete()
+                QuestionLike.objects.filter(question=question, author=request.user).delete()
             else:
                 questionSet.update(likes_count=models.F('likes_count') + 1)
                 QuestionLike(author=request.user, question_id=question.pk).save()

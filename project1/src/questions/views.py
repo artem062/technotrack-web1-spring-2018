@@ -11,6 +11,7 @@ from jsonrpc import jsonrpc_method
 from django.core.serializers import serialize
 # from adjacent.utils import get_connection_parameters
 # from adjacent.client import Client
+from core.prof import profiler
 
 
 class QuestionsListForm (forms.Form):
@@ -24,18 +25,19 @@ class QuestionsListForm (forms.Form):
     search = forms.CharField(required=False, label='Поиск')
 
 
+@profiler
 def questions_list(request):
 
-    questions = Question.objects.count_answers().filter(is_archive=False).select_related('author')
+    # questions = Question.objects.count_answers().filter(is_archive=False).values()
     form = QuestionsListForm(request.GET)
-    if form.is_valid():
-        data = form.cleaned_data
-        if data['sort']:
-            questions = questions.order_by(data['sort'])
-        if data['search']:
-            questions = questions.filter(name__icontains=data['search'])
+    # if form.is_valid(): TODO sorting in question_list
+    #     data = form.cleaned_data
+    #     if data['sort']:
+    #         questions = questions.order_by(data['sort'])
+    #     if data['search']:
+    #         questions = questions.filter(name__icontains=data['search'])
     context = {
-        'questions': questions.count_answers,
+        # 'questions': questions.count_answers,
         'question_form': form,
         # 'token': get_connection_parameters(request.user)['token'],
     }
@@ -66,9 +68,10 @@ class AnswerForm(forms.ModelForm):
         fields = 'name',
 
 
+@profiler
 def question_detail(request, pk=None):
 
-    question = get_object_or_404(Question.objects.count_answers(), id=pk)
+    question = get_object_or_404(Question, id=pk)
     context = {
         'question': question,
         # 'token': get_connection_parameters(request.user)['token'],
@@ -124,6 +127,7 @@ def question_detail(request, pk=None):
 #     })
 
 
+@profiler
 def answer_detail(request, pk=None):
 
     answer = get_object_or_404(Answer, id=pk)
@@ -144,6 +148,7 @@ def answer_detail(request, pk=None):
 #     })
 
 
+@profiler
 def question_file(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
@@ -162,6 +167,7 @@ def question_file(request, pk=None):
 #     })
 
 
+@profiler
 def question_list_base(request):
 
     questions = Question.objects.all().filter(is_archive=False).select_related('author')
@@ -184,10 +190,11 @@ def question_list_base(request):
 #     return JsonResponse(context)
 
 
+@profiler
 def answers_list(request, pk=None):
 
     context = {
-        'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created').values(),
+        'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created').select_related('author'),
         # 'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/answers_list.html', context)

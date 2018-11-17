@@ -14,11 +14,13 @@ from django.core.serializers import serialize
 from django.core.files.base import ContentFile
 import base64
 import hashlib
+from .prof import profiler
 
 
+@profiler
 def page(request):
 
-    return render(request, 'core/main_page.html', {'categories': Category.objects.order_by('name')})
+    return render(request, 'core/main_page.html', {'categories': Category.objects.order_by('name').values('id', 'name')})
 
 
 # @jsonrpc_method('api.page')
@@ -36,6 +38,7 @@ class ChangeForm(UserChangeForm):
         fields = 'username', 'email',
 
 
+@profiler
 def profile(request):
 
     user = User.objects.get(id=request.user.id)
@@ -100,6 +103,7 @@ class RegisterForm(UserCreationForm):
         fields = 'username', 'email'
 
 
+@profiler
 def search(request):
     if request.method == 'GET':
         return render(request, 'core/register.html', {'register_form': RegisterForm()})
@@ -116,6 +120,7 @@ def search(request):
             return render(request, 'core/register.html', {'register_form': form})
 
 
+@profiler
 def register(request):
 
     if request.method == 'GET':
