@@ -9,7 +9,7 @@ from core.models import User
 from questions.models import Question, Answer
 from categories.models import Category
 from django.http import JsonResponse
-from jsonrpc import jsonrpc_method
+# from jsonrpc import jsonrpc_method
 from django.core.serializers import serialize
 from django.core.files.base import ContentFile
 import base64
@@ -17,7 +17,7 @@ import hashlib
 from .prof import profiler
 
 
-@profiler
+# @profiler
 def page(request):
 
     return render(request, 'core/main_page.html', {'categories': Category.objects.order_by('name').values('id', 'name')})
@@ -38,7 +38,7 @@ class ChangeForm(UserChangeForm):
         fields = 'username', 'email',
 
 
-@profiler
+# @profiler
 def profile(request):
 
     user = User.objects.get(id=request.user.id)
@@ -103,7 +103,7 @@ class RegisterForm(UserCreationForm):
         fields = 'username', 'email'
 
 
-@profiler
+# @profiler
 def search(request):
     if request.method == 'GET':
         return render(request, 'core/register.html', {'register_form': RegisterForm()})
@@ -120,7 +120,7 @@ def search(request):
             return render(request, 'core/register.html', {'register_form': form})
 
 
-@profiler
+# @profiler
 def register(request):
 
     if request.method == 'GET':
@@ -147,16 +147,16 @@ def register(request):
 #             return JsonResponse({'register_form': form})
 
 
-def generate_key(filename, category_id):
-    h = hashlib.new('md5')
-    h.update('{}{}'.format(filename, category_id).encode('utf8'))
-    return h.hexdigest()
-
-
-@jsonrpc_method('api.upload_file')
-def upload_file(request, base64_content, file_name, category_id):
-    content = base64.b64decode(base64_content)
-    category = Category.objects.all().filter(id=category_id).first()
-    key = generate_key(file_name, category.id)
-    category.photo.save(key, ContentFile(content.decode('utf8')))
-    return content
+# def generate_key(filename, category_id):
+#     h = hashlib.new('md5')
+#     h.update('{}{}'.format(filename, category_id).encode('utf8'))
+#     return h.hexdigest()
+#
+#
+# @jsonrpc_method('api.upload_file')
+# def upload_file(request, base64_content, file_name, category_id):
+#     content = base64.b64decode(base64_content)
+#     category = Category.objects.all().filter(id=category_id).first()
+#     key = generate_key(file_name, category.id)
+#     category.photo.save(key, ContentFile(content.decode('utf8')))
+#     return content

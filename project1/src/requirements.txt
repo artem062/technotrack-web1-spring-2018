@@ -4,7 +4,7 @@ backports.shutil-get-terminal-size==1.0.0
 backports.ssl-match-hostname==3.5.0.1
 boto3==1.9.32
 botocore==1.12.32
-cent==3.0.0
+cent==2.1.0
 centrifuge==0.8.4
 certifi==2018.10.15
 cffi==1.11.5
@@ -12,6 +12,7 @@ chardet==3.0.4
 coverage==4.5.1
 decorator==4.3.0
 Django==1.11.16
+django-cprofile-middleware==1.0.4
 django-crispy-forms==1.7.2
 django-debug-toolbar==1.10.1
 django-json-rpc==0.7.2
@@ -39,7 +40,6 @@ pathlib2==2.3.0
 pbr==4.3.0
 pexpect==4.4.0
 pickleshare==0.7.4
-pkg-resources==0.0.0
 prompt-toolkit==1.0.15
 ptyprocess==0.5.2
 pyasn1==0.4.4
@@ -58,13 +58,14 @@ scandir==1.7
 simplegeneric==0.8.1
 singledispatch==3.4.0.3
 six==1.11.0
+snakeviz==1.0.0
 social-auth-app-django==2.1.0
 social-auth-core==1.7.0
-sockjs-tornado==1.0.6
+sockjs-tornado==1.0.1
 sqlparse==0.2.4
 text-unidecode==1.2
 toredis-fork==0.1.4
-tornado==5.1.1
+tornado==4.2.1
 toro==0.8
 traitlets==4.3.2
 urllib3==1.23

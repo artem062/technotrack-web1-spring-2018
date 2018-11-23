@@ -7,7 +7,7 @@ from likes.models import QuestionLike
 from django import forms
 from django.views.generic import UpdateView, CreateView
 from django.http import JsonResponse
-from jsonrpc import jsonrpc_method
+# from jsonrpc import jsonrpc_method
 from django.core.serializers import serialize
 # from adjacent.utils import get_connection_parameters
 # from adjacent.client import Client

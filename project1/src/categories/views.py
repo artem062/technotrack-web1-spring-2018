@@ -20,7 +20,7 @@ class CategoriesListForm (forms.Form):
     search = forms.CharField(required=False, label='Поиск')
 
 
-@profiler
+# @profiler
 def category_list(request):
 
     categories = Category.objects.values('id', 'name')
@@ -52,7 +52,7 @@ def category_list(request):
 #     return JsonResponse({'categories': serialize('json', categories)})
 
 
-@profiler
+# @profiler
 def category_detail(request, pk=None):
 
     category = get_object_or_404(Category, id=pk)

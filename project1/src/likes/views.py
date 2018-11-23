@@ -10,6 +10,7 @@ from django.db import models
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
 from core.prof import profiler
 
+
 class QuestionLikeForm(forms.ModelForm):
 
     class Meta:
@@ -17,7 +18,7 @@ class QuestionLikeForm(forms.ModelForm):
         fields = 'author', 'question'
 
 
-@profiler
+# @profiler
 def question_like(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
@@ -37,12 +38,11 @@ def question_like(request, pk=None):
     elif request.method == 'POST' and request.user.id is not None:
         form = QuestionLikeForm(request.POST)
         if form.is_valid():
-            questionSet = Question.objects.filter(id=pk)
             if context['is_liked']:
-                questionSet.update(likes_count=models.F('likes_count') - 1)
+                question.update(likes_count=models.F('likes_count') - 1)
                 QuestionLike.objects.filter(question=question, author=request.user).delete()
             else:
-                questionSet.update(likes_count=models.F('likes_count') + 1)
+                question.update(likes_count=models.F('likes_count') + 1)
                 QuestionLike(author=request.user, question_id=question.pk).save()
             # client = Client()
             # client.publish("update_question_like_{}".format(question.pk), {})
