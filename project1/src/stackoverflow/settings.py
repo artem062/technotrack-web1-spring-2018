@@ -27,7 +27,11 @@ SECRET_KEY = 'a)116tm#wao(5&v(3gnc-!klqzgk%3c5s12u!*)8k((krwni&p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+        'voronov.chickenkiller.com',
+        'localhost',
+        '95.163.213.85',
+]
 
 
 # Application definition
@@ -98,14 +102,10 @@ WSGI_APPLICATION = 'stackoverflow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'DB1',
-        # 'USER': 'artem',
-        # 'PASSWORD': '761804',
-        # 'HOST': 'localhost',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST')
+        'NAME': '2018-Voronov-db',
+        'USER': 'artem',
+        'PASSWORD': '963852741A',
+        'HOST': '192.168.6.247',
     }
 }
 
@@ -172,9 +172,9 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'storage', 'media')
 # MEDIA_URL = '/media/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'storage', 'static')
-# STATIC_URL = '/static/'
-# STATICFILES_DIRS = ('core/static', )
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+#STATIC_URL = '/static/'
+#STATICFILES_DIRS = ('core/static', )
 
 TESTING = 'test' in sys.argv
 
