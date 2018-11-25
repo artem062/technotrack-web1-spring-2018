@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from questions.views import question_detail, questions_list, QuestionEdit, \
-    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file, question_list_base, js_question_list_base
+    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file, question_list_base, #js_question_list_base
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -14,5 +14,5 @@ urlpatterns = [
     url(r'^file/(?P<pk>\d+)/$', question_file, name='question_file'),
     url(r'^answer/edit/(?P<pk>\d+)/$', AnswerEdit.as_view(), name='answer_edit'),
     url(r'^answers_list/(?P<pk>\d+)/$', answers_list, name='answers_list'),
-    url(r'^get/$', js_question_list_base, name='questions_list_get'),
+    # url(r'^get/$', js_question_list_base, name='questions_list_get'),
 ]
