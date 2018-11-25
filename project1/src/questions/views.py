@@ -7,10 +7,10 @@ from likes.models import QuestionLike
 from django import forms
 from django.views.generic import UpdateView, CreateView
 from django.http import JsonResponse
-# from jsonrpc import jsonrpc_method
+from jsonrpc import jsonrpc_method
 from django.core.serializers import serialize
-# from adjacent.utils import get_connection_parameters
-# from adjacent.client import Client
+from core.adja_utils import get_connection_parameters
+from adjacent.client import Client
 
 
 class QuestionsListForm (forms.Form):
@@ -27,8 +27,8 @@ class QuestionsListForm (forms.Form):
 # @profiler
 def questions_list(request):
 
-    # questions = Question.objects.count_answers().filter(is_archive=False).values()
-    form = QuestionsListForm(request.GET)
+    questions = Question.objects.count_answers().filter(is_archive=False)
+    # form = QuestionsListForm(request.GET)
     # if form.is_valid(): TODO sorting in question_list
     #     data = form.cleaned_data
     #     if data['sort']:
@@ -36,9 +36,9 @@ def questions_list(request):
     #     if data['search']:
     #         questions = questions.filter(name__icontains=data['search'])
     context = {
-        # 'questions': questions.count_answers,
-        'question_form': form,
-        # 'token': get_connection_parameters(request.user)['token'],
+        'questions': questions.count_answers,
+        # 'question_form': form,
+        'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'questions/questions_list.html', context)
 
@@ -73,7 +73,7 @@ def question_detail(request, pk=None):
     question = get_object_or_404(Question, id=pk)
     context = {
         'question': question,
-        # 'token': get_connection_parameters(request.user)['token'],
+        'token': get_connection_parameters(request.user)['token'],
     }
     if request.method == 'GET':
         form = AnswerForm(initial={'author': request.user, 'question': question})
@@ -85,9 +85,9 @@ def question_detail(request, pk=None):
             data = form.cleaned_data
             answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
             answer.save()
-            # client = Client()
-            # client.publish("update_answers_{}".format(question.pk), {})
-            # client.send()
+            client = Client()
+            client.publish("update_answers_{}".format(question.pk), {})
+            client.send()
             return redirect('questions:question_detail', pk=question.pk)
         else:
             context['form'] = form
@@ -168,25 +168,21 @@ def question_file(request, pk=None):
 
 # @profiler
 def question_list_base(request):
-
-    questions = Question.objects.all().filter(is_archive=False).select_related('author')
+    questions = Question.objects.filter(is_archive=False).select_related('author')
     context = {
         'questions': questions,
-        # 'is_liked': QuestionLike.objects.filter(author=request.user),
-        # 'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/questions_list.html', context)
 
 
-# @jsonrpc_method('api.question_list_base')
-# def question_list_base(request):
-#
-#     questions = Question.objects.all().filter(is_archive=False).select_related('author')
-#     context = {
-#         'questions': serialize('json', questions),
-#         'is_liked': serialize('json', QuestionLike.objects.filter(author=request.user))
-#     }
-#     return JsonResponse(context)
+@jsonrpc_method('api.question_list_base')
+def js_question_list_base(request):
+
+    questions = Question.objects.all().filter(is_archive=False)
+    context = {
+        'questions': serialize('json', questions),
+    }
+    return JsonResponse(context)
 
 
 # @profiler
@@ -194,7 +190,7 @@ def answers_list(request, pk=None):
 
     context = {
         'answers': Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created').select_related('author'),
-        # 'token': get_connection_parameters(request.user)['token'],
+        'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/answers_list.html', context)
 
@@ -220,9 +216,9 @@ class QuestionAdd(CreateView):
         return super(QuestionAdd, self).form_valid(form)
 
     def get_success_url(self):
-        # client = Client()
-        # client.publish("update_questions_list", {})
-        # client.send()
+        client = Client()
+        client.publish("update_questions_list", {})
+        client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
@@ -239,10 +235,10 @@ class QuestionEdit(UpdateView):
         return queryset
 
     def get_success_url(self):
-        # client = Client()
-        # client.publish("update_questions_list", {})
-        # client.publish("update_question_{}".format(self.object.pk), {})
-        # client.send()
+        client = Client()
+        client.publish("update_questions_list", {})
+        client.publish("update_question_{}".format(self.object.pk), {})
+        client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
 
@@ -259,8 +255,8 @@ class AnswerEdit(UpdateView):
         return queryset
 
     def get_success_url(self):
-        # client = Client()
-        # client.publish("update_answers_{}".format(self.object.question.pk), {})
-        # client.send()
+        client = Client()
+        client.publish("update_answers_{}".format(self.object.question.pk), {})
+        client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.question.id})
 

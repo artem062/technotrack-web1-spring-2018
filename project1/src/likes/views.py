@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from .models import Category, Question, Answer, CategoryLike, QuestionLike, AnswerLike
-from django.views.generic import CreateView
-from django.views import View
+from .models import Category, Question, Answer, QuestionLike
 from django import forms
 from django.db import models
 # from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
+from django.shortcuts import render, get_object_or_404, redirect
+from adjacent.client import Client
 
 
 class QuestionLikeForm(forms.ModelForm):
@@ -37,15 +36,16 @@ def question_like(request, pk=None):
     elif request.method == 'POST' and request.user.id is not None:
         form = QuestionLikeForm(request.POST)
         if form.is_valid():
+            questionSet = Question.objects.filter(id=pk)
             if context['is_liked']:
-                question.update(likes_count=models.F('likes_count') - 1)
+                questionSet.update(likes_count=models.F('likes_count') - 1)
                 QuestionLike.objects.filter(question=question, author=request.user).delete()
             else:
-                question.update(likes_count=models.F('likes_count') + 1)
+                questionSet.update(likes_count=models.F('likes_count') + 1)
                 QuestionLike(author=request.user, question_id=question.pk).save()
-            # client = Client()
-            # client.publish("update_question_like_{}".format(question.pk), {})
-            # client.send()
+            client = Client()
+            client.publish("update_question_like_{}".format(question.pk), {})
+            client.send()
             return redirect('likes:question_like', pk=question.pk)
         else:
             context['form'] = form
