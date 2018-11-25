@@ -29,8 +29,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
         'voronov.chickenkiller.com',
-        'localhost',
-        '95.163.213.85',
 ]
 
 
@@ -102,18 +100,10 @@ WSGI_APPLICATION = 'stackoverflow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': '2018-Voronov-db',
-        # 'USER': 'artem',
-        # 'PASSWORD': '963852741A',
-        # 'HOST': '192.168.6.247',
-        # 'NAME': os.environ.get('DB_NAME'),
-        # 'USER': os.environ.get('DB_USER'),
-        # 'PASSWORD': os.environ.get('DB_PASSWORD'),
-        # 'HOST': os.environ.get('DB_HOST')
-        'NAME': 'DB1',
+        'NAME': '2018-Voronov-db',
         'USER': 'artem',
-        'PASSWORD': '761804',
-        'HOST': 'localhost',
+        'PASSWORD': '963852741A',
+        'HOST': '192.168.6.247',
     }
 }
 
