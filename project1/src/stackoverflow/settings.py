@@ -106,6 +106,11 @@ DATABASES = {
         'USER': 'artem',
         'PASSWORD': '963852741A',
         'HOST': '192.168.6.247',
+        # 'NAME': os.environ.get('DB_NAME'),
+        # 'USER': os.environ.get('DB_USER'),
+        # 'PASSWORD': os.environ.get('DB_PASSWORD'),
+        # 'HOST': os.environ.get('DB_HOST')
+
     }
 }
 
@@ -182,7 +187,6 @@ if TESTING:
     DATABASES['default'] = {'ENGINE': 'django.db.backends.sqlite3'}
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
     STATICFILES_STORAGE = 'django.core.files.storage.FileSystemStorage'
-
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',

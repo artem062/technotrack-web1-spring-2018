@@ -7,6 +7,7 @@ RUN pip install --upgrade pip
 RUN pip install -r /app/requirements.txt
 
 EXPOSE 8000
+VOLUME /app
 WORKDIR /app
 
 USER nobody

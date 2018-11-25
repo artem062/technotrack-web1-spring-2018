@@ -11,7 +11,6 @@ from django.http import JsonResponse
 from django.core.serializers import serialize
 # from adjacent.utils import get_connection_parameters
 # from adjacent.client import Client
-from core.prof import profiler
 
 
 class QuestionsListForm (forms.Form):
@@ -25,7 +24,7 @@ class QuestionsListForm (forms.Form):
     search = forms.CharField(required=False, label='Поиск')
 
 
-@profiler
+# @profiler
 def questions_list(request):
 
     # questions = Question.objects.count_answers().filter(is_archive=False).values()
@@ -68,7 +67,7 @@ class AnswerForm(forms.ModelForm):
         fields = 'name',
 
 
-@profiler
+# @profiler
 def question_detail(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
@@ -127,7 +126,7 @@ def question_detail(request, pk=None):
 #     })
 
 
-@profiler
+# @profiler
 def answer_detail(request, pk=None):
 
     answer = get_object_or_404(Answer, id=pk)
@@ -148,7 +147,7 @@ def answer_detail(request, pk=None):
 #     })
 
 
-@profiler
+# @profiler
 def question_file(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
@@ -167,7 +166,7 @@ def question_file(request, pk=None):
 #     })
 
 
-@profiler
+# @profiler
 def question_list_base(request):
 
     questions = Question.objects.all().filter(is_archive=False).select_related('author')
@@ -190,7 +189,7 @@ def question_list_base(request):
 #     return JsonResponse(context)
 
 
-@profiler
+# @profiler
 def answers_list(request, pk=None):
 
     context = {

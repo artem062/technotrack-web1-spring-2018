@@ -14,7 +14,6 @@ from django.core.serializers import serialize
 from django.core.files.base import ContentFile
 import base64
 import hashlib
-from .prof import profiler
 
 
 # @profiler

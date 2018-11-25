@@ -8,7 +8,6 @@ from django import forms
 from django.db import models
 # from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, HttpResponse, redirect
-from core.prof import profiler
 
 
 class QuestionLikeForm(forms.ModelForm):

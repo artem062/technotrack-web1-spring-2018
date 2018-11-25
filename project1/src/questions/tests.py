@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from .models import Question, Answer
+from questions.models import Question, Answer
 from core.tests import UserFactory
 from mock import patch
 import questions

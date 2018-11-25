@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.test import TestCase, Client
 from core.tests import UserFactory
-from .models import Category
+from categories.models import Category
 import json
 
 import factory

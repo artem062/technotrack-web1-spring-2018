@@ -7,7 +7,6 @@ from django import forms
 # from django.http import JsonResponse
 # from jsonrpc import jsonrpc_method
 # from django.core.serializers import serialize
-from core.prof import profiler
 
 
 class CategoriesListForm (forms.Form):

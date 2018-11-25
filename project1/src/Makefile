@@ -1,14 +1,11 @@
-up:
+run:
 	docker-compose up -d
 
-run: migrate
-	docker-compose exec webapp python /app/manage.py runserver 0.0.0.0:8000
-
-test: up
+test: run
 	docker-compose exec webapp python /app/manage.py test
 	make stop
     
-migrate: up
+migrate: run
 	docker-compose exec webapp python /app/manage.py makemigrations    
 	docker-compose exec webapp python /app/manage.py migrate
 
