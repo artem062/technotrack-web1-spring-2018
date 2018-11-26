@@ -7,7 +7,7 @@ from likes.models import QuestionLike
 from django import forms
 from django.views.generic import UpdateView, CreateView
 from django.http import JsonResponse
-# from jsonrpc import jsonrpc_method
+import jsonrpc # import jsonrpc_method
 from django.core.serializers import serialize
 from core.adja_utils import get_connection_parameters
 from adjacent.client import Client
@@ -175,14 +175,13 @@ def question_list_base(request):
     return render(request, 'pieces/questions_list.html', context)
 
 
-# @jsonrpc_method('api.question_list_base')
-# def js_question_list_base(request):
-#
-#     questions = Question.objects.all().filter(is_archive=False)
-#     context = {
-#         'questions': serialize('json', questions),
-#     }
-#     return JsonResponse(context)
+#@jsonrpc.jsonrpc_method('api.question_list_base')
+def js_question_list_base(request):
+    questions = Question.objects.all().filter(is_archive=False)
+    context = {
+       'questions': serialize('json', questions),
+    }
+    return JsonResponse(context)
 
 
 # @profiler

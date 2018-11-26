@@ -29,6 +29,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
         'voronov.chickenkiller.com',
+        'localhost:3000'
 ]
 
 
