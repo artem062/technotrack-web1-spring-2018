@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth.hashers import check_password
 from core.models import User
 from questions.models import Question, Answer
 from categories.models import Category
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
+from django.views.decorators.csrf import csrf_exempt
+import json
 # from jsonrpc import jsonrpc_method
 from django.core.serializers import serialize
 from django.core.files.base import ContentFile
@@ -86,6 +89,24 @@ def profile(request):
 class Login (LoginView):
 
     template_name = 'core/login.html'
+
+
+@csrf_exempt
+def user_login(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data['login']
+        password = data['password']
+
+        if not User.objects.filter(username=username).exists():
+            return HttpResponseForbidden("No such user")
+
+        user = get_object_or_404(User, username=username)
+
+        if check_password(password, user.password):
+            return JsonResponse({'token': 'welcome'})
+        else:
+            return HttpResponseForbidden("Wrong password")
 
 
 class Logout(LogoutView):

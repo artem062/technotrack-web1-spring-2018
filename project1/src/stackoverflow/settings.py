@@ -25,16 +25,16 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'a)116tm#wao(5&v(3gnc-!klqzgk%3c5s12u!*)8k((krwni&p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-        'voronov.chickenkiller.com',
-        'localhost:3000'
+    'voronov.chickenkiller.com',
+    'localhost:3000'
 ]
 
 CORS_ORIGIN_WHITELIST = (
     'voronov.chickenkiller.com',
-    'localhost:3000',
+    'localhost:3000'
 )
 
 CORS_ALLOW_METHODS = (
@@ -60,7 +60,7 @@ CORS_ALLOW_HEADERS = (
 
 CSRF_TRUSTED_ORIGINS = (
     'voronov.chickenkiller.com',
-    'localhost:3000',
+    'localhost:3000'
 )
 
 # Application definition
@@ -207,8 +207,8 @@ DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 # MEDIA_URL = '/media/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-#STATIC_URL = '/static/'
-#STATICFILES_DIRS = ('core/static', )
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = ('src/static', )
 
 TESTING = 'test' in sys.argv
 

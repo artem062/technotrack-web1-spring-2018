@@ -51,7 +51,6 @@ pyasn1==0.4.4
 pycparser==2.19
 pycrypto==2.6.1
 Pygments==2.2.0
-pygobject==3.26.1
 PyJWT==1.6.4
 python-dateutil==2.7.4
 python-magic==0.4.15
@@ -78,5 +77,4 @@ tornado==4.2.1
 toro==0.8
 traitlets==4.3.2
 urllib3==1.23
-uWSGI==2.0.17.1
 wcwidth==0.1.7
