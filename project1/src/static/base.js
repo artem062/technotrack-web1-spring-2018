@@ -1,5 +1,7 @@
 $(document).ready(
     function () {
+        const centrifugo_url = 'https://voronov.chickenkiller.com/connection/sockjs';
+
         function csrfSafeMethod(method) {
             // these HTTP methods do not require CSRF protection
             return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -33,14 +35,14 @@ $(document).ready(
         $('.editform').each(function () {
             const obj = $(this);
             obj.load(obj.data('url'));
-            // const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
-            // centrifuge.setToken(obj.data('token'));
-            // centrifuge.subscribe(`update_question_${obj.data('pk')}`, function () {
-            //     if (update) {
-            //         obj.load(obj.data('url'));
-            //     }
-            // });
-            // centrifuge.connect();
+            const centrifuge = new Centrifuge(centrifugo_url);
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe(`update_question_${obj.data('pk')}`, function () {
+                if (update) {
+                    obj.load(obj.data('url'));
+                }
+            });
+            centrifuge.connect();
         });
 
         $(document).on('submit', '.ajaxform', function () {
@@ -80,34 +82,34 @@ $(document).ready(
         $('.answers').each(function () {
             const obj = $(this);
             obj.load(obj.data('url'));
-            // const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
-            // centrifuge.setToken(obj.data('token'));
-            // centrifuge.subscribe(`update_answers_${obj.data('pk')}`, function () {
-            //     obj.load(obj.data('url'));
-            // });
-            // centrifuge.connect();
+            const centrifuge = new Centrifuge(centrifugo_url);
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe(`update_answers_${obj.data('pk')}`, function () {
+                obj.load(obj.data('url'));
+            });
+            centrifuge.connect();
         });
 
         $('.like').each(function () {
             const obj = $(this);
             obj.load(obj.data('url'));
-            // const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
-            // centrifuge.setToken(obj.data('token'));
-            // centrifuge.subscribe(`update_question_like_${obj.data('pk')}`, function () {
-            //     obj.load(obj.data('url'));
-            // });
-            // centrifuge.connect();
+            const centrifuge = new Centrifuge(centrifugo_url);
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe(`update_question_like_${obj.data('pk')}`, function () {
+                obj.load(obj.data('url'));
+            });
+            centrifuge.connect();
         });
 
         $('.question_list').each(function () {
             const obj = $(this);
             obj.load(obj.data('url'));
-            // const centrifuge = new Centrifuge('http://localhost:8080/connection/sockjs');
-            // centrifuge.setToken(obj.data('token'));
-            // centrifuge.subscribe(`update_questions_list`, function () {
-            //     obj.load(obj.data('url'));
-            // });
-            // centrifuge.connect();
+            const centrifuge = new Centrifuge(centrifugo_url);
+            centrifuge.setToken(obj.data('token'));
+            centrifuge.subscribe(`update_questions_list`, function () {
+                obj.load(obj.data('url'));
+            });
+            centrifuge.connect();
         });
     }
 );
