@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from questions.views import question_detail, questions_list, QuestionEdit, \
-    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file, question_list_base, #js_question_list_base
+    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file, question_list_base#, js_question_list_base
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
