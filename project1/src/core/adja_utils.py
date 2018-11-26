@@ -22,7 +22,7 @@ def get_connection_parameters(user, info=''):
     }, settings.CENTRIFUGE_SECRET, algorithm="HS256").decode()
     return {
         'sockjs_endpoint': settings.CENTRIFUGE_ADDRESS + '/connection',
-        #'ws_endpoint': settings.CENTRIFUGE_ADDRESS + '/connection/websocket',
+        'ws_endpoint': settings.CENTRIFUGE_ADDRESS + '/connection/websocket',
         'user': user_pk,
         'timestamp': timestamp,
         'token': token,
