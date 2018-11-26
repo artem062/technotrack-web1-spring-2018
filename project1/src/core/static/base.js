@@ -1,6 +1,6 @@
 $(document).ready(
     function () {
-        const centrifugo_url = 'http://localhost:8080/connection/sockjs';
+        const centrifugo_url = 'https://voronov.chickenkiller.com/connection/sockjs';
 
         function csrfSafeMethod(method) {
             // these HTTP methods do not require CSRF protection
