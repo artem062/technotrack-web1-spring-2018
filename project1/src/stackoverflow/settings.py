@@ -32,6 +32,36 @@ ALLOWED_HOSTS = [
         'localhost:3000'
 ]
 
+CORS_ORIGIN_WHITELIST = (
+    'voronov.chickenkiller.com',
+    'localhost:3000',
+)
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+)
+
+CORS_ALLOW_HEADERS = (
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+)
+
+CSRF_TRUSTED_ORIGINS = (
+    'voronov.chickenkiller.com',
+    'localhost:3000',
+)
 
 # Application definition
 
@@ -50,6 +80,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'social_django',
     'adjacent',
+    'corsheaders',
 ]
 
 AUTH_USER_MODEL = 'core.User'
@@ -63,6 +94,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
 ]
 
 ROOT_URLCONF = 'stackoverflow.urls'
