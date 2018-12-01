@@ -209,7 +209,15 @@ def js_add_question(request):
         quest = Question(name=name, text=text, author=get_object_or_404(User, username=username))
         quest.save()
 
-        return JsonResponse({'id': quest.pk, 'status': 'Получено'})
+        client = Client()
+        client.publish("add_question", {
+            'id': quest.pk,
+            'name': name,
+            'text': text,
+        })
+        client.send()
+
+        return JsonResponse({'status': 'Получено'})
 
 
 @csrf_exempt
@@ -222,5 +230,12 @@ def js_add_answer(request):
 
         answer = Answer(name=text, author=get_object_or_404(User, username=username), question_id=quest)
         answer.save()
+
+        client = Client()
+        client.publish("add_answer", {
+            'question_id': quest,
+            'name': text
+        })
+        client.send()
 
         return JsonResponse({'status': 'Получено'})
