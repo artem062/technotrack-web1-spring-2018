@@ -7,10 +7,12 @@ from likes.models import QuestionLike
 from django import forms
 from django.views.generic import UpdateView, CreateView
 from django.http import JsonResponse
-import jsonrpc # import jsonrpc_method
 from django.core.serializers import serialize
 from core.adja_utils import get_connection_parameters
+from core.models import User
 from adjacent.client import Client
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 
 class QuestionsListForm (forms.Form):
@@ -24,7 +26,6 @@ class QuestionsListForm (forms.Form):
     search = forms.CharField(required=False, label='Поиск')
 
 
-# @profiler
 def questions_list(request):
 
     questions = Question.objects.count_answers().filter(is_archive=False)
@@ -43,23 +44,6 @@ def questions_list(request):
     return render(request, 'questions/questions_list.html', context)
 
 
-# @jsonrpc_method('api.questions_list')
-# def questions_list(request):
-#
-#     questions = Question.objects.count_answers().filter(is_archive=False).select_related('author')
-#     form = QuestionsListForm(request.GET)
-#     if form.is_valid():
-#         data = form.cleaned_data
-#         if data['sort']:
-#             questions = questions.order_by(data['sort'])
-#         if data['search']:
-#             questions = questions.filter(name__icontains=data['search'])
-#     return JsonResponse({
-#         'questions': serialize('json', questions),
-#         # 'question_form': form
-#     })
-
-
 class AnswerForm(forms.ModelForm):
 
     class Meta:
@@ -67,7 +51,6 @@ class AnswerForm(forms.ModelForm):
         fields = 'name',
 
 
-# @profiler
 def question_detail(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
@@ -86,7 +69,10 @@ def question_detail(request, pk=None):
             answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
             answer.save()
             client = Client()
-            client.publish("update_answers_{}".format(question.pk), {})
+            client.publish("add_answer", {
+                'question_id': question.pk,
+                'name': data['name']
+            })
             client.send()
             return redirect('questions:question_detail', pk=question.pk)
         else:
@@ -94,39 +80,6 @@ def question_detail(request, pk=None):
             return render(request, 'questions/question_detail.html', context)
 
 
-# @jsonrpc_method('api.question_detail')
-# def question_detail(request, pk=None):
-#
-#     question = get_object_or_404(Question.objects.count_answers(), id=pk)
-#     likes = QuestionLike.objects.filter(question=question)
-#     context = {
-#         'question': question,
-#         'likes': likes.count(),
-#     }
-#     if request.user.id is not None and likes.filter(author=request.user).exists():
-#         context['is_liked'] = True
-#     else:
-#         context['is_liked'] = False
-#     if request.method == 'GET':
-#         form = AnswerForm(initial={'author': request.user, 'question': question})
-#         context['form'] = form
-#     elif request.method == 'POST':
-#         form = AnswerForm(request.POST)
-#         if form.is_valid():
-#             data = form.cleaned_data
-#             answer = Answer(author=request.user, question_id=question.pk, name=data['name'])
-#             answer.save()
-#             return redirect('questions:question_detail', pk=question.pk)
-#         else:
-#             context['form'] = form
-#     return JsonResponse({
-#         'question': serialize('json', Question.objects.all().filter(id=pk)),
-#         'likes': context['likes'],
-#         'is_liked': context['is_liked']
-#     })
-
-
-# @profiler
 def answer_detail(request, pk=None):
 
     answer = get_object_or_404(Answer, id=pk)
@@ -137,17 +90,13 @@ def answer_detail(request, pk=None):
     return render(request, 'questions/answer_edit.html', context)
 
 
-# @jsonrpc_method('api.answer_detail')
-# def answer_detail(request, pk=None):
-#
-#     answer = get_object_or_404(Answer, id=pk)
-#     return JsonResponse({
-#         'answer': serialize('json', Answer.objects.all().filter(id=pk)),
-#         'question': serialize('json', answer.question),
-#     })
+def js_answer_detail(request, pk=None):
+
+    return JsonResponse({
+        'answers': serialize('json', Answer.objects.filter(question_id=pk).order_by('created'))
+    })
 
 
-# @profiler
 def question_file(request, pk=None):
 
     question = get_object_or_404(Question, id=pk)
@@ -157,16 +106,6 @@ def question_file(request, pk=None):
     return render(request, 'pieces/question_file.html', context)
 
 
-# @jsonrpc_method('api.question_file')
-# def question_file(request, pk=None):
-#
-#     question = get_object_or_404(Question, id=pk)
-#     return JsonResponse({
-#         'question': serialize('json', Question.objects.all().filter(id=pk))
-#     })
-
-
-# @profiler
 def question_list_base(request):
     questions = Question.objects.filter(is_archive=False).select_related('author')
     context = {
@@ -175,7 +114,6 @@ def question_list_base(request):
     return render(request, 'pieces/questions_list.html', context)
 
 
-#@jsonrpc.jsonrpc_method('api.question_list_base')
 def js_question_list_base(request):
     questions = Question.objects.all().filter(is_archive=False)
     context = {
@@ -184,7 +122,6 @@ def js_question_list_base(request):
     return JsonResponse(context)
 
 
-# @profiler
 def answers_list(request, pk=None):
 
     context = {
@@ -192,15 +129,6 @@ def answers_list(request, pk=None):
         'token': get_connection_parameters(request.user)['token'],
     }
     return render(request, 'pieces/answers_list.html', context)
-
-
-# @jsonrpc_method('api.answers_list')
-# def answers_list(request, pk=None):
-#
-#     return JsonResponse({
-#         'answers': serialize('json',
-#                              Answer.objects.all().filter(question_id=pk, is_archive=False).order_by('created')),
-#     })
 
 
 class QuestionAdd(CreateView):
@@ -216,7 +144,11 @@ class QuestionAdd(CreateView):
 
     def get_success_url(self):
         client = Client()
-        client.publish("update_questions_list", {})
+        client.publish("add_question", {
+            'id': self.object.pk,
+            'name': self.object.name,
+            'text': self.object.text,
+        })
         client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
@@ -235,8 +167,11 @@ class QuestionEdit(UpdateView):
 
     def get_success_url(self):
         client = Client()
-        client.publish("update_questions_list", {})
-        client.publish("update_question_{}".format(self.object.pk), {})
+        client.publish("update_question", {
+            'id': self.object.pk,
+            'name': self.object.name,
+            'text': self.object.text,
+        })
         client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.pk})
 
@@ -255,7 +190,37 @@ class AnswerEdit(UpdateView):
 
     def get_success_url(self):
         client = Client()
-        client.publish("update_answers_{}".format(self.object.question.pk), {})
+        client.publish("update_answer", {
+            'question_id': self.object.question.pk,
+            'name': self.object.name
+        })
         client.send()
         return reverse('questions:question_detail', kwargs={'pk': self.object.question.id})
 
+
+@csrf_exempt
+def js_add_question(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data['token']
+        name = data['topic']
+        text = data['text']
+
+        quest = Question(name=name, text=text, author=get_object_or_404(User, username=username))
+        quest.save()
+
+        return JsonResponse({'id': quest.pk, 'status': 'Получено'})
+
+
+@csrf_exempt
+def js_add_answer(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data['token']
+        quest = data['question_id']
+        text = data['text']
+
+        answer = Answer(name=text, author=get_object_or_404(User, username=username), question_id=quest)
+        answer.save()
+
+        return JsonResponse({'status': 'Получено'})

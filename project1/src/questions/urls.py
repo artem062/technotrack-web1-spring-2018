@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from questions.views import question_detail, questions_list, QuestionEdit, \
-    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file, question_list_base, js_question_list_base
+    QuestionAdd, answer_detail, AnswerEdit, answers_list, question_file, \
+    question_list_base, js_question_list_base, js_answer_detail, js_add_question, js_add_answer
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -15,4 +16,7 @@ urlpatterns = [
     url(r'^answer/edit/(?P<pk>\d+)/$', AnswerEdit.as_view(), name='answer_edit'),
     url(r'^answers_list/(?P<pk>\d+)/$', answers_list, name='answers_list'),
     url(r'^get/$', js_question_list_base, name='questions_list_get'),
+    url(r'^get_answers/(?P<pk>\d+)/$', js_answer_detail, name='answers_list_get'),
+    url(r'^add_js/$', js_add_question, name='question_add_js'),
+    url(r'^add_answer_js/$', js_add_answer, name='answer_add_js'),
 ]

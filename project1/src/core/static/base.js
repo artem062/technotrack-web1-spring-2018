@@ -1,6 +1,6 @@
 $(document).ready(
     function () {
-        const centrifugo_url = 'https://voronov.chickenkiller.com/connection/sockjs';
+        const centrifugo_url = 'wss://voronov.chickenkiller.com/connection/websocket';
 
         function csrfSafeMethod(method) {
             // these HTTP methods do not require CSRF protection
@@ -37,7 +37,7 @@ $(document).ready(
             obj.load(obj.data('url'));
             const centrifuge = new Centrifuge(centrifugo_url);
             centrifuge.setToken(obj.data('token'));
-            centrifuge.subscribe(`update_question_${obj.data('pk')}`, function () {
+            centrifuge.subscribe(`update_question`, function () {
                 if (update) {
                     obj.load(obj.data('url'));
                 }
@@ -84,7 +84,10 @@ $(document).ready(
             obj.load(obj.data('url'));
             const centrifuge = new Centrifuge(centrifugo_url);
             centrifuge.setToken(obj.data('token'));
-            centrifuge.subscribe(`update_answers_${obj.data('pk')}`, function () {
+            centrifuge.subscribe(`add_answer`, function () {
+                obj.load(obj.data('url'));
+            });
+            centrifuge.subscribe(`update_answer`, function () {
                 obj.load(obj.data('url'));
             });
             centrifuge.connect();
@@ -106,7 +109,10 @@ $(document).ready(
             obj.load(obj.data('url'));
             const centrifuge = new Centrifuge(centrifugo_url);
             centrifuge.setToken(obj.data('token'));
-            centrifuge.subscribe(`update_questions_list`, function () {
+            centrifuge.subscribe(`add_question`, function () {
+                obj.load(obj.data('url'));
+            });
+            centrifuge.subscribe(`update_question`, function () {
                 obj.load(obj.data('url'));
             });
             centrifuge.connect();

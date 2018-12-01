@@ -104,7 +104,7 @@ def user_login(request):
         user = get_object_or_404(User, username=username)
 
         if check_password(password, user.password):
-            return JsonResponse({'token': 'welcome'})
+            return JsonResponse({'token': username})
         else:
             return HttpResponseForbidden("Wrong password")
 

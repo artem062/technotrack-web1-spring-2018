@@ -29,7 +29,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'voronov.chickenkiller.com',
-    'localhost:3000'
+    'localhost:3000',
 ]
 
 CORS_ORIGIN_WHITELIST = (
@@ -136,10 +136,14 @@ WSGI_APPLICATION = 'stackoverflow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '2018-Voronov-db',
+        # 'NAME': '2018-Voronov-db',
+        # 'USER': 'artem',
+        # 'PASSWORD': '963852741A',
+        # 'HOST': '192.168.6.247',
+        'NAME': 'DB1',
         'USER': 'artem',
-        'PASSWORD': '963852741A',
-        'HOST': '192.168.6.247',
+        'PASSWORD': '761804',
+        'HOST': 'localhost',
     }
 }
 
