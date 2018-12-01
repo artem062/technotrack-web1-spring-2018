@@ -93,7 +93,7 @@ def answer_detail(request, pk=None):
 def js_answer_detail(request, pk=None):
 
     return JsonResponse({
-        'answers': serialize('json', Answer.objects.filter(question_id=pk).order_by('created'))
+        'answers': serialize('json', Answer.objects.filter(question_id=pk, is_archive=False).order_by('created'))
     })
 
 
